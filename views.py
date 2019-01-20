@@ -149,6 +149,7 @@ def save_word(code):
     lang = get_lang(code)
 
     nat = request.form.get('nat')
+    notes = request.form.get('notes', '')
     count = int(request.form.get('counter'))
 
     definitions = []
