@@ -234,10 +234,16 @@ ol.definitions {
     max-height: 500px;
     overflow: scroll;
     border-radius: 4px;
+    white-space: nowrap;
 }
 
 .dropdown:hover .dropdown-content {
     display: block;
+}
+
+.checkbox-label {
+    display: inline-block;
+    width: 100%;
 }
 
 /************************************************************************************

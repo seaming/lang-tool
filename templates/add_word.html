@@ -24,8 +24,8 @@
     <div class="col-6 dropdown multiple-select">
       <span id="classlist" class="text-muted">No classes selected. Hover here to show class dropdown.</span>
       <div class="dropdown-content">{% for c in classes %}
-        <input type="checkbox" class="class-checkbox" name="class_{{ c.abbr }}" onclick="update_classlist();">
-        <label for="checkbox_{{ c.abbr }}">{{ c.long }}</label><br>
+        <input type="checkbox" id="checkbox_{{ c.abbr }}" class="class-checkbox" name="class_{{ c.abbr }}" onclick="update_classlist();">
+        <label class="checkbox-label" for="checkbox_{{ c.abbr }}">{{ c.long }}</label><br>
         {% endfor %}</div>
     </div>
   </div>
@@ -91,8 +91,8 @@
   }
 
   function get_checkbox_label(checkbox) {
-    var val = checkbox.name.split('_')[1];
-    return document.querySelector('label[for="checkbox_' + val + '"]').innerHTML;
+    var id = checkbox.id;
+    return document.querySelector('label[for="' + id + '"]').innerHTML;
   }
 </script>
 {% endblock %}
