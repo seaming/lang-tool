@@ -87,8 +87,6 @@ def save_lang(code):
     lang.name = request.form.get('name', 'Unnamed language')
     lang.description = request.form.get('description', '')
     lang.use_classes = request.form.get('use_classes') is not None
-    lang.abbreviate_classes = request.form.get(
-        'abbreviate_classes') is not None
     lang.save()
 
     classifiers = {}
