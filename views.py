@@ -43,7 +43,7 @@ def add_lang_post():
         lang.name = name
         lang.save()
 
-    return redirect(url_for('view_lang', code=lang.code))
+    return redirect(url_for('edit_lang', code=lang.code))
 
 
 @app.route('/lang/')
