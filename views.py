@@ -170,8 +170,6 @@ def save_word(code):
         flash('You must enter at least one definition', 'danger')
         return redirect(url_for('add_word', code=lang.code))
 
-    print(definitions)
-
     word = Word.create(id=uuid4(), lang=lang, nat=nat, notes=notes)
     for i, d in enumerate(definitions):
         Definition.create(id=uuid4(), word=word, order=i,
