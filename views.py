@@ -51,7 +51,7 @@ def null_lang():
     return redirect(url_for('home'))
 
 
-@app.route('/lang/<code>')
+@app.route('/lang/<code>/')
 def view_lang(code):
     lang = get_lang(code)
 
@@ -69,7 +69,7 @@ def view_lang(code):
     return render_template('view_lang.html', lang=lang, words=words)
 
 
-@app.route('/lang/<code>/settings', methods=['GET'])
+@app.route('/lang/<code>/settings/', methods=['GET'])
 def edit_lang(code):
     lang = get_lang(code)
     return render_template(
@@ -80,7 +80,7 @@ def edit_lang(code):
     )
 
 
-@app.route('/lang/<code>/settings', methods=['POST'])
+@app.route('/lang/<code>/settings/', methods=['POST'])
 def save_lang(code):
     lang = get_lang(code)
 
@@ -130,7 +130,7 @@ def save_lang(code):
     return redirect(url_for('view_lang', code=code))
 
 
-@app.route('/lang/<code>/add_word', methods=['GET'])
+@app.route('/lang/<code>/add_word/', methods=['GET'])
 def add_word(code):
     lang = get_lang(code)
     return render_template(
@@ -141,7 +141,7 @@ def add_word(code):
     )
 
 
-@app.route('/lang/<code>/add_word', methods=['POST'])
+@app.route('/lang/<code>/add_word/', methods=['POST'])
 def save_word(code):
     lang = get_lang(code)
 
@@ -175,13 +175,13 @@ def save_word(code):
     return redirect(url_for('add_word', code=lang.code))
 
 
-@app.route('/word/<id>')
+@app.route('/word/<id>/')
 def view_word(id):
     word = Word.get_by_id(id)
     return render_template('view_word.html', word=word)
 
 
-@app.route('/word/<id>/delete', methods=['GET', 'POST'])
+@app.route('/word/<id>/delete/', methods=['GET', 'POST'])
 def delete_word(id):
     word = Word.get_by_id(id)
 
