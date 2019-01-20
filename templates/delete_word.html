@@ -4,35 +4,28 @@
 
 {% block body %}
 
-<div>
-  <div class="word-nat">{{ word.nat }}</div>
-  <div class="word-pos">
-    ({{ word.pos }}{{ '; ' if word.classes }}{{
-    word.list_classes()|join(', ') }})
-  </div>
-  <div class="float-right">word in <a href="{{ url_for('view_lang', code=word.lang.code) }}">{{ word.lang.name }}</a></div><br>
-  <ol class="word-defs">
-    {% for def in word.list_definitions() %}
-    <li class="def"><span class="def">{{ def }}</span></li>
-    {% endfor %}
-  </ol>
-</div>
+<h3>Are you sure you want to delete this word?</h3>
 
-<form action="{{ url_for('delete_word', id=word.id) }}" method="POST">
-  <input class="float-right" type="submit" value="Delete">
-  <input class="float-right" type="button" value="Cancel" onclick="cancel();">
+<p>
+  {{ word.lang.name }} &mdash; <i>{{ word.nat }}</i> ({{ word.pos }}{{ '; ' if
+  word.classes }}{{ word.list_classes()|join(', ') }}) "{{ word.list_definitions()|join('; ') }}"
+</p>
+
+<form class="row" action="{{ url_for('delete_word', id=word.id) }}" method="POST">
+  <input class="col big delete" type="submit" value="Delete">
+  <br><br><br><br>
+  <input class="col big" type="button" value="Cancel" onclick="cancel();">
 </form>
 
 {% endblock %}
 
 {% block nav %}
-{# <a href="{{ url_for('edit_word', wordid=id) }}">✏️</a> #}
 {% endblock %}
 
 {% block script %}
 <script>
   function cancel() {
-    location.href = "{{ url_for('view_lang', code=word.lang.code) }}";
+    location.href = "{{ url_for('view_word', id=word.id) }}";
   }
 </script>
 {% endblock %}

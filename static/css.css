@@ -319,7 +319,7 @@ input[type=text]:hover {
 
 input[type=submit] {
     padding: 6px 14px;
-    margin-right: 4px;
+    margin: 4px;
     font-size: 90%;
     -webkit-transition: background-color 0.05s ease-in-out;
     transition: background-color 0.05s ease-in-out;
@@ -357,11 +357,21 @@ input[type=button]:hover {
     background-color: #e6e6e6;
 }
 
-input[type=button].wide {
+input[type=button].add-row {
     width: 100%;
     margin: 4px 0;
     padding: 1px 0px 3px 0px;
     font-size: 75%;
+}
+
+input.big {
+    font-size: large;
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+
+input.delete:hover {
+    background-color: rgb(228, 23, 23);
 }
 
 /************************************************************************************
