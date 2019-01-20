@@ -27,6 +27,7 @@ class Language(BaseModel):
 class Word(BaseModel):
     lang = ForeignKeyField(Language, backref='words')
     nat = CharField()
+    notes = TextField(default='')
 
 
 class Definition(BaseModel):
