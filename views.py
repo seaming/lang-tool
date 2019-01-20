@@ -87,7 +87,8 @@ def save_lang(code):
     lang.name = request.form.get('name', 'Unnamed language')
     lang.description = request.form.get('description', '')
     lang.use_classes = request.form.get('use_classes') is not None
-    lang.abbreviate_classes = request.form.get('abbreviate_classes') is not None
+    lang.abbreviate_classes = request.form.get(
+        'abbreviate_classes') is not None
     lang.save()
 
     classifiers = {}
@@ -124,7 +125,8 @@ def save_lang(code):
                                   & (WordClassifier.abbr.not_in(class_abbreviations))).execute()
 
     for k, v in classifiers.items():
-        c, created = WordClassifier.get_or_create(lang=lang, type=k[1], abbr=k[0], defaults={'long': v})
+        c, created = WordClassifier.get_or_create(
+            lang=lang, type=k[1], abbr=k[0], defaults={'long': v})
         if not created:
             c.long = v
         c.save()
