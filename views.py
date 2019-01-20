@@ -1,8 +1,8 @@
 from flask import request, render_template, redirect, url_for, flash, abort
-from peewee import fn
+from peewee import fn, JOIN
 
 from app import app, db
-from models import Language, Word, WordClassifier, CLASSIFIER_TYPE_POS, CLASSIFIER_TYPE_CLASS
+from models import Language, Word, Definition, WordClassifier, CLASSIFIER_TYPE_POS, CLASSIFIER_TYPE_CLASS
 
 
 def get_lang(code):
@@ -58,13 +58,13 @@ def view_lang(code):
     query = request.args.get('q', '')
     sort = {
         'nat': Word.nat,
-        'en': Word.definitions,
-        'pos': Word.pos,
-        'class': Word.classes,
+        'en': Definition.en,
+        'pos': Definition.pos,
+        'class': Definition.classes,
     }.get(request.args.get('sort', 'nat'))
 
-    words = lang.words.where(Word.nat.contains(
-        query) | Word.definitions.contains(query)).order_by(sort)
+    words = lang.words.join(Definition).where(Definition.en.contains(
+        query) | Word.nat.contains(query)).group_by(Word.nat).order_by(sort)
 
     return render_template('view_lang.html', lang=lang, words=words)
 
@@ -150,31 +150,35 @@ def save_word(code):
     lang = get_lang(code)
 
     nat = request.form.get('nat')
-    defs = []
+    count = int(request.form.get('counter'))
 
+    definitions = []
     i = 0
-    while True:
-        d = request.form.get(f'en-{i}')
-        if not d:
-            break
-        defs.append(d)
+    while i < count:
+        definition = request.form.get(f'en-{i}')
+        pos = request.form.get(f'pos-{i}')
+
+        classes = []
+        for c in lang.classes():
+            if request.form.get(f'class_{c.abbr}-{i}') is not None:
+                classes.append(c.abbr)
+
+        definitions.append((definition, pos, classes))
         i += 1
 
-    if not defs:
+    if not definitions:
         flash('You must enter at least one definition', 'danger')
         return redirect(url_for('add_word', code=lang.code))
 
-    pos = request.form.get('pos')
+    print(definitions)
 
-    classes = []
-    for c in lang.classes():
-        if request.form.get(f'class_{c.abbr}'):
-            classes.append(c.abbr)
+    word = Word.create(lang=lang, nat=nat)
+    for i, d in enumerate(definitions):
+        Definition.create(word=word, order=i,
+                          en=d[0], pos=d[1], classes=','.join(d[2]))
 
-    word = Word.create(lang=lang, nat=nat, definitions='\n'.join(defs),
-                pos=pos, classes='\n'.join(classes))
-
-    flash(f"Word added! Click <a href='{url_for('view_word', id=word.id)}'>here</a> to see it", 'success')
+    flash(
+        f"Word added! Click <a href='{url_for('view_word', id=word.id)}'>here</a> to see it", 'success')
 
     return redirect(url_for('add_word', code=lang.code))
 

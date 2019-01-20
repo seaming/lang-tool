@@ -11,34 +11,27 @@
   </div>
 
   <div class="row">
-    <div class="col-6 form-label">Part of speech</div>
-    {% if lang.use_classes %}<div class="col-6 form-label">Classes</div>{% endif %}
-  </div>
-
-  <div class="row">
-    <div class="col-6">
-      <select required class="col" name="pos">{% for p in pos %}
-        <option value="{{ p.abbr }}">{{ p.long }}</option>
-        {% endfor %}</select>
-    </div>
-    {% if lang.use_classes %}
-    <div class="col-6 dropdown multiple-select">
-      <span id="classlist" class="text-muted">No classes selected. Hover here to show class dropdown.</span>
-      <div class="dropdown-content">{% for c in classes %}
-        <input type="checkbox" id="checkbox_{{ c.abbr }}" class="class-checkbox" name="class_{{ c.abbr }}" onclick="update_classlist();">
-        <label class="checkbox-label" for="checkbox_{{ c.abbr }}">{{ c.long }}</label><br>
-        {% endfor %}</div>
-    </div>
-    {% endif %}
-  </div>
-
-  <div class="row">
     <div class="col form-label">English definitions<br><span class="small text-muted">Multiple definitions can be given
         for a single word to indicate polysemy. It is recommended to put sufficiently distinct meanings in separate
         definitions.</span></div>
     <ol class="col definitions">
-      <li class="entry">
-        <input type="text" name="en-0">
+      <li class="entry row">
+        <div class="col-{% if lang.use_classes %}5{% else %}10{% endif %}"><input type="text" name="en-0"></div>
+        <div class="col-2">
+          <select required class="col" name="pos-0">{% for p in pos %}
+            <option value="{{ p.abbr }}">{{ p.long }}</option>
+            {% endfor %}</select>
+        </div>
+        {% if lang.use_classes %}
+        <div class="col-5 dropdown multiple-select">
+          <span id="classlist-0" class="text-muted small classlist">No classes selected. Hover to show class dropdown.</span>
+          <div class="dropdown-content">{% for c in classes %}
+            <input type="checkbox" id="checkbox_{{ c.abbr }}-0" class="class-checkbox" name="class_{{ c.abbr }}-0"
+              onclick="update_classlist(this);">
+            <label class="checkbox-label" for="checkbox_{{ c.abbr }}-0">{{ c.long }}</label><br>
+            {% endfor %}</div>
+        </div>
+        {% endif %}
       </li>
 
       <li class="entry" style="list-style-type:none;">
@@ -47,6 +40,7 @@
     </ol>
   </div>
 
+  <input id="counter" type="hidden" name="counter" value="1">
   <input class="float-right" type="submit" value="Save">
 </form>
 {% endblock %}
@@ -65,30 +59,55 @@
 
     new_li = prev.parentNode.insertBefore(new_li, prev.nextSibling);
 
-    // these find the input field in the duplicated li, skipping over text nodes
-    var input_field = new_li.firstChild;
-    do input_field = input_field.nextSibling; while (input_field && input_field.nodeType !== 1);
-    input_field.value = ""; // clear the input field
+    var inputs = new_li.querySelectorAll('input, select');
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].value = "";
 
-    // increment field index
-    var num = parseInt(input_field.name.split('-')[1]);
-    input_field.name = "en-" + (num + 1);
+      // increment field index
+      var items = inputs[i].name.split('-');
+      inputs[i].name = items[0] + "-" + (parseInt(items[1]) + 1);
+
+      // update checkbox id
+      if (inputs[i].type == 'checkbox') {
+        inputs[i].checked = false;
+        var items = inputs[i].id.split('-');
+        inputs[i].id = items[0] + "-" + (parseInt(items[1]) + 1);
+      }
+    }
+
+    var labels = new_li.querySelectorAll('label');
+    for (var i = 0; i < labels.length; i++) {
+      // increment checkbox label number
+      var items = labels[i].getAttribute('for').split('-');
+      labels[i].setAttribute('for', items[0] + "-" + (parseInt(items[1]) + 1));
+    }
+
+    // update classlist id
+    var list = new_li.querySelector('[id*=classlist]');
+    var items = list.id.split('-');
+    list.id = items[0] + "-" + (parseInt(items[1]) + 1);
+    list.innerHTML = "No classes selected. Hover to show class dropdown.";
+    list.classList = "text-muted small classlist";
+
+    var counter = document.querySelector('#counter');
+    counter.value = parseInt(counter.value) + 1;
   }
 
-  function update_classlist() {
-    var checkboxes = document.querySelectorAll('input[type=checkbox].class-checkbox:checked');
-    var classlist = document.querySelector('#classlist');
+  function update_classlist(el) {
+    var num = el.name.split('-')[1];
+    var checkboxes = document.querySelectorAll('input[type=checkbox][name$="-' + num + '"].class-checkbox:checked');
+    var clist = document.querySelector('#classlist-' + num);
+
     if (checkboxes.length > 0) {
-      var s = "";
-      for (var i = 0; i < checkboxes.length - 1; i++) {
-        s += get_checkbox_label(checkboxes[i]) + ", ";
+      var s = [];
+      for (var i = 0; i < checkboxes.length; i++) {
+        s.push(get_checkbox_label(checkboxes[i]));
       }
-      s += get_checkbox_label(checkboxes[checkboxes.length - 1]);
-      classlist.innerHTML = s;
-      classlist.classList = "";
+      clist.innerHTML = s.join(', ');
+      clist.classList = "small classlist";
     } else {
-      classlist.innerHTML = "No classes selected. Hover here to show class dropdown.";
-      classlist.classList = "text-muted";
+      clist.innerHTML = "No classes selected. Hover to show class dropdown.";
+      clist.classList = "text-muted small classlist";
     }
   }
 

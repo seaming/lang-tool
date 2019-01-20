@@ -27,18 +27,16 @@ class Language(BaseModel):
 
 class Word(BaseModel):
     lang = ForeignKeyField(Language, backref='words')
-
     nat = CharField()
+
+
+class Definition(BaseModel):
+    word = ForeignKeyField(Word, backref='definitions', on_delete='CASCADE')
+    order = SmallIntegerField()
+
+    en = CharField()
     pos = CharField()
     classes = CharField()
-    # user enters single line definitions, these are kept joined with newlines and split to provide the different definitions
-    definitions = TextField()
-
-    def list_definitions(self):
-        return [x.strip() for x in self.definitions.split('\n')]
-
-    def list_classes(self):
-        return [x.strip() for x in self.classes.split('\n')]
 
 
 CLASSIFIER_TYPE_POS = 1

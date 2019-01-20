@@ -201,7 +201,12 @@ span.def {
 }
 
 ol.definitions {
+    list-style: none;
     margin-top: 5px;
+}
+
+ol.definitions > li > [class*="col"]:first-child {
+    padding-left: 0px;
 }
 
 .clickable-row td {
@@ -216,7 +221,7 @@ ol.definitions {
     border: 1px solid #e6e6e6;
 }
 
-#classlist {
+.classlist {
     display: inline-block;
 }
 

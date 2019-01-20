@@ -1,10 +1,10 @@
 from app import app, db
-from models import Language, Word, WordClassifier
+from models import Language, Word, Definition, WordClassifier
 import views
 import util
 
 db.create_tables([
-    Language, Word, WordClassifier
+    Language, Word, Definition, WordClassifier
 ])
 
 app.run()

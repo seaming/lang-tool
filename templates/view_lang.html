@@ -35,20 +35,18 @@
 <table>
   <thead>
     <th>{{ lang.name or 'Unnamed language' }}</th>
-    <th class=" small text-muted">POS</th>
-    {% if lang.use_classes %}<th class=" small text-muted">Classes</th>{% endif %}
     <th>English</th>
   </thead>
   <tbody>
     {% for word in words %}
     <tr class="clickable-row" href="{{ url_for('view_word', id=word.id) }}" onclick="go_to_word(this);">
       <td>{{ word.nat }}</td>
-      <td class="small text-muted">{{ word.pos|convert_pos(lang) }}</td>
-      {% if lang.use_classes %}<td class="small text-muted">
-        {% if lang.abbreviate_classes %}{{ word.list_classes()|join(', ') }}
-        {% else %}{{ word.list_classes()|map('convert_class', lang)|join(', ') }}{% endif %}
-      </td>{% endif %}
-      <td {% if word.definitions|length> 50 %}class="small-text"{% endif %}>{{ word.list_definitions()|join('; ') }}</td>
+      <td {% if word.definitions|map(attribute='en' )|join(';')|length> 50 %}class="small-text"{% endif %}>
+        {% for d in word.definitions %}
+        {{ d.en }} <span class="small text-muted">
+          ({{ d.pos }}{% if d.classes %}; {{ d.classes|split(',')|join(', ')}}{% endif %})
+        </span>
+        {% endfor %}</td>
     </tr>
     {% endfor %}
   </tbody>
