@@ -12,7 +12,7 @@
 
   <div class="row">
     <div class="col-6 form-label">Part of speech</div>
-    <div class="col-6 form-label">Classes</div>
+    {% if lang.use_classes %}<div class="col-6 form-label">Classes</div>{% endif %}
   </div>
 
   <div class="row">
@@ -21,6 +21,7 @@
         <option value="{{ p.abbr }}">{{ p.long }}</option>
         {% endfor %}</select>
     </div>
+    {% if lang.use_classes %}
     <div class="col-6 dropdown multiple-select">
       <span id="classlist" class="text-muted">No classes selected. Hover here to show class dropdown.</span>
       <div class="dropdown-content">{% for c in classes %}
@@ -28,6 +29,7 @@
         <label class="checkbox-label" for="checkbox_{{ c.abbr }}">{{ c.long }}</label><br>
         {% endfor %}</div>
     </div>
+    {% endif %}
   </div>
 
   <div class="row">
