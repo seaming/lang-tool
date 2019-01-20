@@ -16,6 +16,7 @@ class Language(BaseModel):
     description = TextField(default='')
 
     use_classes = BooleanField(default=True)
+    abbreviate_classes = BooleanField(default=False)
 
     def parts_of_speech(self):
         return self.classifiers.where(WordClassifier.type == CLASSIFIER_TYPE_POS)

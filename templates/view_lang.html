@@ -44,7 +44,8 @@
       <td>{{ word.nat }}</td>
       <td class="small text-muted">{{ word.pos|convert_pos(lang) }}</td>
       {% if lang.use_classes %}<td class="small text-muted">
-        {{ word.list_classes()|map('convert_class', lang)|join(', ') }}
+        {% if lang.abbreviate_classes %}{{ word.list_classes()|join(', ') }}
+        {% else %}{{ word.list_classes()|map('convert_class', lang)|join(', ') }}{% endif %}
       </td>{% endif %}
       <td {% if word.definitions|length > 50 %}class="small-text"{% endif %}>{{ word.list_definitions()|join('; ') }}</td>
     </tr>
