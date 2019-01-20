@@ -13,7 +13,8 @@
 
 <form action="{{ url_for('view_lang', code=lang.code) }}" method="GET">
   <div class="row center">
-    <div class="col-8"><input class="small" type="text" name="q" placeholder="Search..." {% if query %}value="{{ query }}{% endif %}"></div>
+    <div class="col-8"><input class="small" type="text" name="q" placeholder="Search..." {% if request.args.get("q")
+        %}value="{{ request.args.get("q") }}{% endif %}"></div>
     <div class="col-3 small">
       Sort by &thinsp;
       <select name="sort" class="small">
@@ -47,7 +48,7 @@
         {% if lang.abbreviate_classes %}{{ word.list_classes()|join(', ') }}
         {% else %}{{ word.list_classes()|map('convert_class', lang)|join(', ') }}{% endif %}
       </td>{% endif %}
-      <td {% if word.definitions|length > 50 %}class="small-text"{% endif %}>{{ word.list_definitions()|join('; ') }}</td>
+      <td {% if word.definitions|length> 50 %}class="small-text"{% endif %}>{{ word.list_definitions()|join('; ') }}</td>
     </tr>
     {% endfor %}
   </tbody>
