@@ -123,8 +123,9 @@ def save_lang(code):
                                   & (WordClassifier.abbr.not_in(class_abbreviations))).execute()
 
     for k, v in classifiers.items():
-        c, _ = WordClassifier.get_or_create(lang=lang, type=k[1], abbr=k[0])
-        c.long = v
+        c, created = WordClassifier.get_or_create(lang=lang, type=k[1], abbr=k[0], defaults={'long': v})
+        if not created:
+            c.long = v
         c.save()
 
     return redirect(url_for('view_lang', code=code))
