@@ -8,7 +8,7 @@
   <div class="word-nat">{{ word.nat }}</div>
   <div class="word-pos">
     ({{ word.pos }}{{ '; ' if word.classes }}{{
-    word.list_classes()|join(', ') }})
+    word.list_classes()|map('convert_class', word.lang)|join(', ') }})
   </div>
   <div class="float-right">word in <a href="{{ url_for('view_lang', code=word.lang.code) }}">{{ word.lang.name }}</a></div><br>
   <ol class="word-defs">

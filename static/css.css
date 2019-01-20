@@ -204,6 +204,10 @@ ol.definitions {
     margin-top: 5px;
 }
 
+.clickable-row td {
+    padding-left: 15px;
+}
+
 .multiple-select {
     margin: 9px 0px;
     padding: 5px 10px;
