@@ -51,7 +51,8 @@ CLASSIFIER_TYPE_CLASS = 2
 class WordClassifier(BaseModel):
     # combines parts of speech and classes
 
-    lang = ForeignKeyField(Language, backref='classifiers')
+    lang = ForeignKeyField(
+        Language, backref='classifiers', on_delete='CASCADE')
     type = SmallIntegerField()
 
     abbr = CharField()
