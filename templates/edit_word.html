@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ word['nat'] }} | Edit word{% endblock %}
+
+{% block body %}
+
+<form action="{{ url_for('save_word', wordid=id) }}" method="POST">
+  <div class="row">
+    <div class="col-2 form-label">{{ settings['name'] or 'Unnamed language' }}<br>
+      <span class="small text-muted">At time 0</span></div>
+    <div class="col-10"><input type="text" name="nat" value="{{ word.get('nat', '') }}"></div>
+  </div>
+
+  <br>
+
+  <div class="row">
+    <div class="col-2 form-label">Part of speech<br><span class="small text-muted">For changing POS over time</span></div>
+    <div class="col-10">
+      <div class="row text-muted">
+        <div class="col-6 small-col-head">Part of speech</div>
+        <div class="col-6 small-col-head">Time</div>
+      </div>
+
+      {% for pos in word.get('pos', [])|sort(attribute=1) %}
+      <div class="row">
+        <div class="col-6 supersmall">
+          <select name="pos-{{ loop.index-1 }}" class="fullwidth">
+            {% for id,p in settings.get('pos', {}).items() %}
+            {% set _p = (word['pos']|current_pos(time=pos[1]))[1] %}
+            <option value="{{ id }}" {% if _p==p[1] %}selected{% endif %}>{{
+              p[0] }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-6 small"><input class="small" type="number" name="pos_time-{{ loop.index-1 }}" value={{ pos[1] }}></div>
+      </div>
+      {% endfor %}
+
+      <div class="row">
+        <div class="col supersmall">
+          <input class="small wide" id="poses" type="button" value="+">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="row">
+    <div class="col-2 form-label">Classes<br><span class="small text-muted">For changing classes over time</span></div>
+    <div class="col-10">
+      <div class="row text-muted">
+        <div class="col-6 small-col-head">Classes</div>
+        <div class="col-6 small-col-head">Time</div>
+      </div>
+
+      {% for cl in word.get('classes', [])|sort(attribute=1) %}
+      <div class="row">
+        <div class="col-6 supersmall">
+          <select name="class-{{ loop.index-1 }}" class="fullwidth" size=1 multiple>
+            {% for id,c in settings.get('classes', {}).items() %}
+            {% set _c = (word['classes']|current_classes(time=cl[1]))|map(attribute=1) %}
+            <option value="{{ id }}" {% if c[1] in _c %}selected{% endif %}>{{
+              c[0] }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-6 small"><input class="small" type="number" name="class_time-{{ loop.index-1 }}" value={{ cl[1] }}></div>
+      </div>
+      {% endfor %}
+
+      <div class="row">
+        <div class="col supersmall">
+          <input class="small wide" id="classes" type="button" value="+">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="row">
+    <div class="col-2 form-label">Definitions<br><span class="small text-muted">For changing meaning over time</span></div>
+  </div>
+
+  <input type="hidden" id="form-count-poses" name="pos_count" value={{ word.get('pos', [])|length }}>
+  <input type="hidden" id="form-count-classes" name="class_count" value={{ word.get('classes', [])|length }}>
+
+  <input class="float-right" type="submit" value="Save">
+</form>
+
+{% endblock %}
+
+{% block nav %}
+<a href="{{ url_for('dictionary') }}">📖</a>
+<a href="{{ url_for('view_word', wordid=id) }}">🔙</a>
+{% endblock %}
+
+{% block script %}
+<script>
+  function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+      fn();
+    } else {
+      document.addEventListener('DOMContentLoaded', fn);
+    }
+  }
+
+  function add_table_row() {
+    var buttons = document.getElementsByClassName("add-table-row");
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].onclick = function () {
+        var prev = this.parentNode.parentNode;
+        do prev = prev.previousSibling; while (prev && prev.nodeType !== 1);
+        prev = prev.cloneNode(true);
+
+        prev.childNodes.forEach(e => {
+          if (e.nodeType == Node.ELEMENT_NODE) {
+            e.childNodes.forEach(f => {
+              if (f.nodeType == Node.ELEMENT_NODE) {
+                f.value = "";
+
+                var segs = f.name.split('-');
+                f.name = segs[0] + "-" + (parseInt(segs[1]) + 1);
+              }
+            })
+          }
+        });
+
+        this.parentNode.parentNode.parentNode.insertBefore(prev, this.parentNode.parentNode);
+
+        var count = document.getElementById('form-count-' + this.id);
+        count.value = parseInt(count.value) + 1;
+      }
+    }
+  }
+
+  ready(add_table_row);
+</script>
+{% endblock %}

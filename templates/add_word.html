@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Add word to {{ lang.name }}{% endblock %}
+
+{% block body %}
+<form action="{{ url_for('save_word', code=lang.code) }}" method="POST">
+
+  <div class="row">
+    <div class="col form-label">Word in {{ lang.name }}</div>
+    <div class="col"><input required type="text" name="nat"></div>
+  </div>
+
+  <div class="row">
+    <div class="col-6 form-label">Part of speech</div>
+    <div class="col-6 form-label">Classes</div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <select required class="col" name="pos">{% for p in pos %}
+        <option value="{{ p.abbr }}">{{ p.long }}</option>
+        {% endfor %}</select>
+    </div>
+    <div class="col-6 dropdown multiple-select">
+      <span id="classlist" class="text-muted">No classes selected. Hover here to show class dropdown.</span>
+      <div class="dropdown-content">{% for c in classes %}
+        <input type="checkbox" class="class-checkbox" name="class_{{ c.abbr }}" onclick="update_classlist();">
+        <label for="checkbox_{{ c.abbr }}">{{ c.long }}</label><br>
+        {% endfor %}</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col form-label">English definitions<br><span class="small text-muted">Multiple definitions can be given
+        for a single word to indicate polysemy. It is recommended to put sufficiently distinct meanings in separate
+        definitions.</span></div>
+    <ol class="col definitions">
+      <li class="entry">
+        <input type="text" name="en-0">
+      </li>
+
+      <li class="entry" style="list-style-type:none;">
+        <input class="small wide" type="button" onclick="add_row(this);" value="+">
+      </li>
+    </ol>
+  </div>
+
+  <input class="float-right" type="submit" value="Save">
+</form>
+{% endblock %}
+
+{% block nav %}
+<a href="{{ url_for('view_lang', code=lang.code) }}">🔠</a>
+{% endblock %}
+
+{% block script %}
+<script>
+  function add_row(el) {
+    var prev = el.parentNode;
+    // find the previous li node, skipping text nodes
+    do prev = prev.previousSibling; while (prev && prev.nodeType !== 1);
+    var new_li = prev.cloneNode(true);
+
+    new_li = prev.parentNode.insertBefore(new_li, prev.nextSibling);
+
+    // these find the input field in the duplicated li, skipping over text nodes
+    var input_field = new_li.firstChild;
+    do input_field = input_field.nextSibling; while (input_field && input_field.nodeType !== 1);
+    input_field.value = ""; // clear the input field
+
+    // increment field index
+    var num = parseInt(input_field.name.split('-')[1]);
+    input_field.name = "en-" + (num + 1);
+  }
+
+  function update_classlist() {
+    var checkboxes = document.querySelectorAll('input[type=checkbox].class-checkbox:checked');
+    var classlist = document.querySelector('#classlist');
+    if (checkboxes.length > 0) {
+      var s = "";
+      for (var i = 0; i < checkboxes.length - 1; i++) {
+        s += get_checkbox_label(checkboxes[i]) + ", ";
+      }
+      s += get_checkbox_label(checkboxes[checkboxes.length - 1]);
+      classlist.innerHTML = s;
+      classlist.classList = "";
+    } else {
+      classlist.innerHTML = "No classes selected. Hover here to show class dropdown.";
+      classlist.classList = "text-muted";
+    }
+  }
+
+  function get_checkbox_label(checkbox) {
+    var val = checkbox.name.split('_')[1];
+    return document.querySelector('label[for="checkbox_' + val + '"]').innerHTML;
+  }
+</script>
+{% endblock %}

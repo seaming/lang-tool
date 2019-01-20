@@ -1,0 +1,446 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.container {
+    background-color: white;
+    padding: 50px 100px 100px 100px;
+    margin: 0% 15% 0% 15%;
+}
+
+/************************************************************************************
+ *  NAVIGATION
+ ************************************************************************************/
+
+nav {
+    top: 4em;
+    right: 4em;
+    width: 8%;
+    z-index: 100;
+    position: fixed;
+    padding: 20px 20px 20px 0;
+    border-radius: 8px;
+    font-size: 90%;
+}
+
+nav a {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    font-size: 200%;
+    border: 1px solid #e6e6e6;
+    border-radius: 6px;
+    color: black;
+}
+
+nav a:hover {
+    background-color: rgb(24, 117, 255);
+    color: white;
+}
+
+/************************************************************************************
+ *  STRUCTURE STYLES
+ ************************************************************************************/
+
+.row {
+    padding: none;
+    margin: none;
+}
+
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+[class*="col"] {
+    float: left;
+    padding: 5px;
+    display: table;
+    padding: none;
+    margin: none;
+}
+
+[class*="col"].small {
+    padding: 0px 5px;
+}
+
+[class*="col"].supersmall {
+    padding: 0px;
+}
+
+
+[class*="col"]>* {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.col-1 { width: 8.33%; }
+.col-2 { width: 16.66%; }
+.col-3 { width: 25%; }
+.col-4 { width: 33.33%; }
+.col-5 { width: 41.66%; }
+.col-6 { width: 50%; }
+.col-7 { width: 58.33%; }
+.col-8 { width: 66.66%; }
+.col-9 { width: 75%; }
+.col-10 { width: 83.33%; }
+.col-11 { width: 91.66%; }
+.col { width: 100%; }
+
+/************************************************************************************
+ *  TABLE STYLES
+ ************************************************************************************/
+
+.td-1 { width: 8.33%; }
+.td-2 { width: 16.66%; }
+.td-3 { width: 25%; }
+.td-4 { width: 33.33%; }
+.td-5 { width: 41.66%; }
+.td-6 { width: 50%; }
+.td-7 { width: 58.33%; }
+.td-8 { width: 66.66%; }
+.td-9 { width: 75%; }
+.td-10 { width: 83.33%; }
+.td-11 { width: 91.66%; }
+.td { width: 100%; }
+
+tbody:before {
+    content: "-";
+    display: block;
+    line-height: 0.5em;
+    color: transparent;
+}
+
+table {
+    width: 100%;
+    border-spacing: 0px;
+}
+
+table tr:hover {
+    background-color: #f2f2f2;
+}
+
+table th {
+    text-align: start;
+    background: #f2f2f2;
+    padding: 12px 12px 12px 12px;
+    border-bottom: 1px solid #d2d2d2;
+}
+
+table td {
+    padding: 6px 0px 6px 6px;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+td.small {
+    width: 1%;
+    max-width: 10%;
+}
+
+td.small-text {
+    font-size: small;
+}
+
+/************************************************************************************
+ *  LANGUAGE STYLES
+ ************************************************************************************/
+
+ .lang-button {
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+    padding: 1em 1.5em;
+    margin: 10px 1em 10px 1em;
+    display: block;
+    font-size: large;
+    text-align: center;
+}
+
+.lang-button:hover {
+    border: 1px solid darkgray;
+    transition: background-color 0.05s ease-in-out;
+}
+
+/************************************************************************************
+ *  DICTIONARY STYLES
+ ************************************************************************************/
+
+.word-nat {
+    font-size: 200%;
+    margin: 0px 0.5em 4px 0px;
+    display: inline-block;
+}
+
+.word-defs {
+    font-size: 120%;
+    display: inline-block;
+}
+
+li.def {
+    margin-bottom: 0.4em;
+}
+
+span.def {
+    margin-left: 0.5em;
+}
+
+.word-pos {
+    font-size: 125%;
+    margin: 8px 0.5em 0px 0px;
+    color: #4b4b4b;
+    display: inline-block;
+}
+
+ol.definitions {
+    margin-top: 5px;
+}
+
+.multiple-select {
+    margin: 9px 0px;
+    padding: 5px 10px;
+    font-size: 95%;
+    border-radius: 4px;
+    border: 1px solid #e6e6e6;
+}
+
+#classlist {
+    display: inline-block;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    margin: 0px;
+    width: 96%;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 6px;
+    z-index: 100;
+    max-height: 500px;
+    overflow: scroll;
+    border-radius: 4px;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/************************************************************************************
+ *  FORM AND INPUT STYLES
+ ************************************************************************************/
+
+.form-label {
+    padding-top: 14px;
+    padding-left: 14px;
+}
+
+input {
+    padding: 6px 10px;
+    margin: 4px 0;
+    font-size: 95%;
+    border-radius: 4px;
+    border: 1px solid #e6e6e6;
+}
+
+textarea {
+    width: 100%;
+    padding: 6px 10px;
+    margin: 4px 0;
+    font-size: 95%;
+    border-radius: 4px;
+    border: 1px solid #e6e6e6;
+}
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    /* display: inline-block; */
+    margin: 4px 4px;
+    padding: 6px 10px;
+    padding-right: 25px;
+    font-size: 95%;
+    border-radius: 4px;
+    border: 1px solid #e6e6e6;
+}
+
+select[multiple] {
+    height: 2em;
+    overflow: scroll;
+}
+
+select:not([multiple]) {
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position: top 50% right 0px;
+}
+
+select.small {
+    padding: 3px 5px;
+    padding-right: 25px;
+}
+
+input.small {
+    padding: 3px 5px;
+}
+
+input[type=checkbox] {
+    margin-top: 12px;
+    margin-left: 4px;
+}
+
+input[type=number]{
+    width: 100%;
+}
+
+input[type=text] {
+    width: 100%;
+}
+
+input[type=text]:hover {
+    border: 1px solid darkgray;
+}
+
+input[type=submit] {
+    padding: 6px 14px;
+    margin-right: 4px;
+    font-size: 90%;
+    -webkit-transition: background-color 0.05s ease-in-out;
+    transition: background-color 0.05s ease-in-out;
+}
+
+input[type=submit].small {
+    padding: 2px 8px;
+}
+
+input[type=submit][disabled] {
+    color: #959595;
+}
+
+input[type=submit][disabled]:hover {
+    background: #e6e6e6;
+}
+
+input[type=submit]:hover {
+    background-color: rgb(24, 117, 255);
+    color: white;
+}
+
+input[type=button] {
+    margin: 4px 4px;
+    border-radius: 4px;
+    border: 1px solid #e6e6e6;
+    padding: 6px 14px;
+    font-size: 90%;
+    -webkit-transition: background-color 0.05s ease-in-out;
+    transition: background-color 0.05s ease-in-out;
+}
+
+input[type=button]:hover {
+    border: 1px solid lightgrey;
+    background-color: #e6e6e6;
+}
+
+input[type=button].wide {
+    width: 100%;
+    margin: 4px 0;
+    padding: 1px 0px 3px 0px;
+    font-size: 75%;
+}
+
+/************************************************************************************
+ *  ALERT AND MESSAGE STYLES
+ ************************************************************************************/
+
+.flashes {
+    margin-bottom: 1.5em;
+}
+
+.flash {
+    width: 100%;
+    margin: 8px 0px;
+    padding: 12px;
+    border: 1px solid #e6e6e6;
+    border-radius: 6px;
+}
+
+.success {
+    border: 1px solid rgb(180, 227, 180);
+    background-color: rgb(210, 240, 210);
+    color: rgb(15, 94, 15);
+}
+
+.danger {
+    border: 1px solid rgb(227, 180, 180);
+    background-color: rgb(240, 210, 210);
+    color: rgb(94, 15, 15);
+}
+
+/************************************************************************************
+ *  FORMATTING AND TAG STYLES
+ ************************************************************************************/
+
+.small {
+    font-size: small;
+}
+
+.small-col-head {
+    font-size: 80%;
+    color: #959595;
+}
+
+.fullwidth {
+    width: 100%;
+}
+
+.text-muted {
+    color: #959595;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.float-right {
+    float: right;
+}
+
+hr {
+    border: 0.5px solid #e6e6e6;
+    clear: both;
+    display: block;
+    width: 96%;
+    height: 1px;
+}
+
+a {
+    text-decoration: none;
+    color: #081735;
+}
+
+a:visited {
+    color: #081735;
+}
+
+p {
+    margin: 20px 0px;
+    line-height: 1.5;
+}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block body %}
+{% for lang in langs %}
+<a class="lang-button" href="{{ url_for('view_lang', code=lang.code) }}">{{ lang.name }}</a>
+{% endfor %}
+
+<br>
+
+<a class="lang-button text-muted" href="{{ url_for('add_lang') }}">
+  Add new language
+</a>
+
+{% endblock %}

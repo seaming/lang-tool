@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Word not found{% endblock %}
+
+{% block everything %}
+
+<body style="margin: 22% 25% 28% 25%;">
+  <h1>This word don't exist</h1>
+  <h3><a href="{{ url_for('dictionary') }}">back to the dictionary</a></h3>
+</body>
+
+{% endblock %}

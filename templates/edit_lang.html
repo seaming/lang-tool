@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ lang.name }} settings{% endblock %}
+
+{% block body %}
+<form action="{{ url_for('save_lang', code=lang.code) }}" method="POST">
+  <div class="row">
+    <div class="col-2 form-label">Language name</div>
+    <div class="col-10"><input type="text" name="name" value="{{ lang.name }}"></div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-2 form-label">Description</div>
+    <div class="col-10">
+      <textarea name="description" rows=5>{{ lang.description }}</textarea>
+    </div>
+  </div>
+
+  <hr><br>
+
+  <div class="row">
+    <div class="col-2 form-label">Parts of speech</div>
+    <div class="col-10">
+      <div class="row">
+        <div class="col-6 small head">Long name</div>
+        <div class="col-6 small head">Abbreviation</div>
+      </div>
+
+      {% if pos %}
+      {% for p in pos %}
+      <div class="row">
+        <div class="col-6 small"><input class="small" type="text" name="pos_long-{{ loop.index-1 }}" value="{{ p.long }}"></div>
+        <div class="col-6 small"><input class="small" type="text" name="pos_abbr-{{ loop.index-1 }}" value="{{ p.abbr }}"></div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <div class="row">
+        <div class="col-6 small"><input class="small" type="text" name="pos_long-0"></div>
+        <div class="col-6 small"><input class="small" type="text" name="pos_abbr-0"></div>
+      </div>
+      {% endif %}
+
+      <div class="row">
+        <div class="col">
+          <input class="small wide" type="button" value="+" onclick="add_row(this);">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="row">
+    <div class="col-2 form-label">Use classes?</div>
+    <div class="col-10"><input type="checkbox" name="use_classes" {% if lang.use_classes %}checked{% endif %}></div>
+  </div>
+
+  <div class="row">
+    <div class="col-2 form-label">Classes</div>
+    <div class="col-10">
+      <div class="row">
+        <div class="col-6 small head">Long name</div>
+        <div class="col-6 small head">Abbreviation</div>
+      </div>
+
+      {% if classes %}
+      {% for c in classes %}
+      <div class="row">
+        <div class="col-6 small">
+          <input class="small" type="text" name="classes_long-{{ loop.index-1 }}" value="{{ c.long }}">
+        </div>
+        <div class="col-6 small">
+          <input class="small" type="text" name="classes_abbr-{{ loop.index-1 }}" value="{{ c.abbr }}">
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <div class="row">
+        <div class="col-6 small"><input class="small" type="text" name="classes_long-0"></div>
+        <div class="col-6 small"><input class="small" type="text" name="classes_abbr-0"></div>
+      </div>
+      {% endif %}
+
+      <div class="row">
+        <div class="col">
+          <input class="small wide" type="button" value="+" onclick="add_row(this);">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <input class="float-right" type="submit" value="Save">
+  <input class="float-right" type="button" value="Cancel" onclick="cancel();">
+</form>
+{% endblock %}
+
+{% block nav %}
+<a href="{{ url_for('view_lang', code=lang.code) }}">📒</a>
+{% endblock %}
+
+{% block script %}
+<script>
+  function add_row(el) {
+    var prev = el.parentNode.parentNode;
+    // find the previous li node, skipping text nodes
+    do prev = prev.previousSibling; while (prev && prev.nodeType !== 1);
+    var new_li = prev.cloneNode(true);
+
+    new_li = prev.parentNode.insertBefore(new_li, prev.nextSibling);
+
+    var inputs = new_li.querySelectorAll('input');
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].value = "";
+
+      // increment field index
+      var prefix = inputs[i].name.split('-')[0];
+      var num = parseInt(inputs[i].name.split('-')[1]);
+      inputs[i].name = prefix + "-" + (num + 1);
+    }
+  }
+
+  function cancel() {
+    location.href = "{{ url_for('view_lang', code=lang.code) }}";
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,37 @@
+<!doctype html>
+
+<head>
+  <title>{% block title %}Hmm{% endblock %}</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css.css') }}">
+
+  {% block head %}{% endblock %}
+</head>
+
+{% block everything %}
+
+<body>
+  <nav role="navigation">
+    {% block nav %}{% endblock %}
+  </nav>
+
+  <div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class=flashes>
+      {% for category, message in messages %}
+      <div class="flash {{ category }}">{{ message|safe }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+
+    {% block body %}{% endblock %}
+  </div>
+
+  {% block script %}
+  {% endblock %}
+</body>
+
+{% endblock %}
