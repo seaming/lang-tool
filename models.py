@@ -1,5 +1,6 @@
 from Conlanger.sce import apply_ruleset
 from peewee import *
+from uuid import uuid4
 
 from app import db
 
@@ -25,12 +26,16 @@ class Language(BaseModel):
 
 
 class Word(BaseModel):
-    lang = ForeignKeyField(Language, backref='words')
+    id = UUIDField(primary_key=True)
+
+    lang = ForeignKeyField(Language, backref='words', on_delete='CASCADE')
     nat = CharField()
     notes = TextField(default='')
 
 
 class Definition(BaseModel):
+    id = UUIDField(primary_key=True)
+
     word = ForeignKeyField(Word, backref='definitions', on_delete='CASCADE')
     order = SmallIntegerField()
 

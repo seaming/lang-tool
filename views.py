@@ -1,5 +1,6 @@
 from flask import request, render_template, redirect, url_for, flash, abort
 from peewee import fn, JOIN
+from uuid import uuid4
 
 from app import app, db
 from models import Language, Word, Definition, WordClassifier, CLASSIFIER_TYPE_POS, CLASSIFIER_TYPE_CLASS
@@ -170,9 +171,9 @@ def save_word(code):
 
     print(definitions)
 
-    word = Word.create(lang=lang, nat=nat)
+    word = Word.create(id=uuid4(), lang=lang, nat=nat, notes=notes)
     for i, d in enumerate(definitions):
-        Definition.create(word=word, order=i,
+        Definition.create(id=uuid4(), word=word, order=i,
                           en=d[0], pos=d[1], classes=','.join(d[2]))
 
     flash(
