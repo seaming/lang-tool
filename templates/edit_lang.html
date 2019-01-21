@@ -15,7 +15,7 @@
     <div class="col-2 form-label">Description<br>
       <span class="small text-muted">Language descriptions support markdown.</span></div>
     <div class="col-10">
-      <textarea name="description" rows=5>{{ lang.description }}</textarea>
+      <textarea name="description" rows=8>{{ lang.description }}</textarea>
     </div>
   </div>
 
@@ -111,7 +111,7 @@
 {% endblock %}
 
 {% block nav %}
-<a href="{{ url_for('view_lang', code=lang.code) }}">📒</a>
+<a href="{{ url_for('view_lang', code=lang.code) }}">🔠</a>
 <br><br>
 <a href="{{ url_for('delete_lang', code=lang.code) }}">🗑</a>
 {% endblock %}
