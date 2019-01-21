@@ -20,6 +20,10 @@ def home():
         langs=Language.select().order_by(fn.Lower(Language.name))
     )
 
+###############################################################################
+##                               LANGUAGE VIEWS                              ##
+###############################################################################
+
 
 @app.route('/add_lang/', methods=['GET'])
 def add_lang():
@@ -152,6 +156,11 @@ def delete_lang(code):
         return redirect(url_for('home'))
 
     return render_template('delete_lang.html', lang=lang)
+
+
+###############################################################################
+##                                 WORD VIEWS                                ##
+###############################################################################
 
 
 @app.route('/lang/<code>/add_word/', methods=['GET'])
