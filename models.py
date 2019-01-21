@@ -15,6 +15,7 @@ class Language(BaseModel):
 
     name = CharField(default='Unnamed language')
     description = TextField(default='')
+    parent = ForeignKeyField('self', null=True, backref='daughters')
 
     use_classes = BooleanField(default=True)
 
@@ -31,6 +32,8 @@ class Word(BaseModel):
     lang = ForeignKeyField(Language, backref='words', on_delete='CASCADE')
     nat = CharField()
     notes = TextField(default='')
+
+    parent = ForeignKeyField('self', null=True, backref='descendants')
 
 
 class Definition(BaseModel):
