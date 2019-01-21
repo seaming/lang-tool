@@ -142,6 +142,18 @@ def save_lang(code):
     return redirect(url_for('view_lang', code=code))
 
 
+@app.route('/lang/<code>/delete/', methods=['GET', 'POST'])
+def delete_lang(code):
+    lang = get_lang(code)
+
+    if request.method == 'POST':
+        lang.delete_instance()
+        flash('Language deleted!', 'success')
+        return redirect(url_for('home'))
+
+    return render_template('delete_lang.html', lang=lang)
+
+
 @app.route('/lang/<code>/add_word/', methods=['GET'])
 def add_word(code):
     lang = get_lang(code)

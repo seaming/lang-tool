@@ -111,6 +111,8 @@
 
 {% block nav %}
 <a href="{{ url_for('view_lang', code=lang.code) }}">📒</a>
+<br><br>
+<a href="{{ url_for('delete_lang', code=lang.code) }}">🗑</a>
 {% endblock %}
 
 {% block script %}

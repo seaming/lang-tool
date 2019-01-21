@@ -11,4 +11,4 @@ DEBUG = True
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-db = SqliteDatabase(app.config['DATABASE'])
+db = SqliteDatabase(app.config['DATABASE'], pragmas={'foreign_keys': 1})

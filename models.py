@@ -15,7 +15,8 @@ class Language(BaseModel):
 
     name = CharField(default='Unnamed language')
     description = TextField(default='')
-    parent = ForeignKeyField('self', null=True, backref='daughters')
+    parent = ForeignKeyField('self', backref='daughters',
+                             null=True, on_delete='SET NULL')
 
     use_classes = BooleanField(default=True)
 
@@ -34,7 +35,7 @@ class Language(BaseModel):
             daughters.add(l.code)
             for d in l.daughters:
                 get_daughters(d)
-        
+
         get_daughters(self)
         langs = Language.select().where(Language.code.not_in(daughters))
         return langs
@@ -47,7 +48,8 @@ class Word(BaseModel):
     nat = CharField()
     notes = TextField(default='')
 
-    parent = ForeignKeyField('self', null=True, backref='descendants')
+    parent = ForeignKeyField(
+        'self', backref='descendants', null=True, on_delete='SET NULL')
 
 
 class Definition(BaseModel):
