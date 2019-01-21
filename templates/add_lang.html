@@ -21,7 +21,7 @@
   const submit = document.getElementById('submit');
 
   code.addEventListener('keyup', function (event) {
-    var is_valid = /^[a-zA-Z0-9._]{1,255}$/.test(code.value);
+    var is_valid = /^[a-zA-Z0-9._]{3,255}$/.test(code.value);
     submit.disabled = !is_valid;
   });
 </script>
