@@ -92,7 +92,7 @@ def save_lang(code):
     parent = request.form.get('parent')
     parent = Language.get_or_none(Language.code == parent)
 
-    if parent in lang.get_potential_parents():
+    if parent in lang.get_potential_parents() or parent is None:
         lang.parent = parent
     else:
         flash('Could not add parent language as it would create a cycle in the family tree', 'danger')
