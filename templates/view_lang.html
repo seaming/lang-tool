@@ -39,7 +39,7 @@
   </thead>
   <tbody>
     {% for word in words %}
-    <tr class="clickable-row" href="{{ url_for('view_word', id=word.id) }}" onclick="go_to_word(this);">
+    <tr class="clickable-row" href="{{ url_for('view_word', id=word.id.hex) }}" onclick="go_to_word(this);">
       <td>{{ word.nat }}</td>
       <td {% if word.definitions|map(attribute='en' )|join(';')|length> 50 %}class="small-text"{% endif %}>
         {% for d in word.definitions %}

@@ -11,7 +11,7 @@
     d.pos }}; {{ d.classes|split(',')|join(', ') }})</span>; {% endfor %}
 </p>
 
-<form class="row" action="{{ url_for('delete_word', id=word.id) }}" method="POST">
+<form class="row" action="{{ url_for('delete_word', id=word.id.hex) }}" method="POST">
   <input class="col big delete" type="submit" value="Delete">
   <br><br><br><br>
   <input class="col big" type="button" value="Cancel" onclick="cancel();">
@@ -25,7 +25,7 @@
 {% block script %}
 <script>
   function cancel() {
-    location.href = "{{ url_for('view_word', id=word.id) }}";
+    location.href = "{{ url_for('view_word', id=word.id.hex) }}";
   }
 </script>
 {% endblock %}

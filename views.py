@@ -1,6 +1,6 @@
 from flask import request, render_template, redirect, url_for, flash, abort
 from peewee import fn, JOIN
-from uuid import uuid4
+from uuid import uuid4, UUID
 
 from app import app, db
 from models import Language, Word, Definition, WordClassifier, CLASSIFIER_TYPE_POS, CLASSIFIER_TYPE_CLASS
@@ -176,20 +176,20 @@ def save_word(code):
                           en=d[0], pos=d[1], classes=','.join(d[2]))
 
     flash(
-        f"Word added! Click <a href='{url_for('view_word', id=word.id)}'>here</a> to see it", 'success')
+        f"Word added! Click <a href='{url_for('view_word', id=word.id.hex)}'>here</a> to see it", 'success')
 
     return redirect(url_for('add_word', code=lang.code))
 
 
 @app.route('/word/<id>/')
 def view_word(id):
-    word = Word.get_by_id(id)
+    word = Word.get_by_id(UUID(id))
     return render_template('view_word.html', word=word)
 
 
 @app.route('/word/<id>/delete/', methods=['GET', 'POST'])
 def delete_word(id):
-    word = Word.get_by_id(id)
+    word = Word.get_by_id(UUID(id))
 
     if request.method == 'POST':
         lang = word.lang
