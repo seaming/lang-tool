@@ -280,6 +280,11 @@ ol.definitions > li > [class*="col"]:first-child {
     padding-left: 14px;
 }
 
+.form-label > span.small {
+    display: inline-block;
+    margin-top: 6px;
+}
+
 input {
     padding: 6px 10px;
     margin: 4px 0;
