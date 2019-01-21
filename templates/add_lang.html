@@ -7,8 +7,10 @@
 <h2>Add new language</h2>
 
 <form action="{{ url_for('add_lang_post') }}" method="POST" id="form">
-  <input type="text" name="code" placeholder="Language code" id="lang-code" required>
-  <input type="text" name="name" placeholder="Language name">
+    <div class="col form-label">Language code<br><span class="small text-muted">This is a unique identifier for the language. It must be between 3 and 255 characters in length and can contain letters, digits or @/./+/-/_.</span></div>
+  <input type="text" name="code" id="lang-code" maxlength="255" minlength="3" required>
+  <div class="col form-label">Language name<br><span class="small text-muted">This will default to 'Unnamed language' if left blank.</span></div>
+  <input type="text" name="name" maxlength="255">
   <input class="float-right" type="submit" value="Save" id="submit">
 </form>
 
@@ -21,7 +23,7 @@
   const submit = document.getElementById('submit');
 
   code.addEventListener('keyup', function (event) {
-    var is_valid = /^[a-zA-Z0-9._]{3,255}$/.test(code.value);
+    var is_valid = /^[a-zA-Z0-9@.+-_]{3,255}$/.test(code.value);
     submit.disabled = !is_valid;
   });
 </script>
