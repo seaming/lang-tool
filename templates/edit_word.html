@@ -3,10 +3,132 @@
 {% block title %}{{ word.nat }} | Edit word{% endblock %}
 
 {% block body %}
+<form action="{{ url_for('save_word', id=word.id.hex) }}" method="POST">
+
+  <div class="row">
+    <div class="col form-label">Word in {{ word.lang.name }}</div>
+    <div class="col"><input required type="text" name="nat" value="{{ word.nat }}" spellcheck="false"></div>
+  </div>
+
+  <div class="row">
+    <div class="col form-label">English definitions<br><span class="small text-muted">Multiple definitions can be given
+        for a single word to indicate polysemy. It is recommended to put sufficiently distinct meanings in separate
+        definitions. Definitions can be deleted by leaving the English translation field blank.</span></div>
+    <ol class="col definitions">
+      {% for d in word.definitions %}
+      {% set dloop = loop %}
+      <li class="entry row">
+        <input type="hidden" name="id_{{ dloop.index-1 }}" value="{{ d.id.hex }}">
+        <div class="col-{% if word.lang.use_classes %}5{% else %}10{% endif %}"><input type="text" name="en-{{ dloop.index-1 }}"
+            value="{{ d.en }}" placeholder="English translation"></div>
+        <div class="col-2">
+          <select required class="col" name="pos-{{ dloop.index-1 }}">{% for p in word.lang.parts_of_speech() %}
+            <option value="{{ p.abbr }}" {% if d.pos==p.abbr %}selected{% endif %}>{{ p.long }}</option>
+            {% endfor %}</select>
+        </div>
+        {% if word.lang.use_classes %}
+        <div class="col-5 dropdown multiple-select">
+          <span id="classlist-{{ dloop.index-1 }}" class="{% if not d.classes %}text-muted{% endif %} small classlist">
+            {% if d.classes %}{{ d.classes|split(',')|map('convert_class', word.lang)|join(', ') }}{% else %}No classes
+            selected. Hover to show class dropdown.{% endif %}
+          </span>
+          <div class="dropdown-content">{% for c in word.lang.classes() %}
+            <input type="checkbox" id="checkbox_{{ c.abbr }}-{{ dloop.index-1 }}" class="class-checkbox" name="class_{{ c.abbr }}-{{ dloop.index-1 }}"
+              onclick="update_classlist(this);" {% if c.abbr in d.classes %}checked{% endif %}>
+            <label class="checkbox-label" for="checkbox_{{ c.abbr }}-{{ dloop.index-1 }}">{{ c.long }}</label><br>
+            {% endfor %}</div>
+        </div>
+        {% endif %}
+      </li>
+      {% endfor %}
+
+      <li class="entry" style="list-style-type:none;">
+        <input class="small add-row" type="button" onclick="add_row(this);" value="+">
+      </li>
+    </ol>
+  </div>
+
+  <div class="row">
+    <div class="col form-label">Notes&emsp;<span class="small text-muted">Word notes support markdown.</span></div>
+    <div class="col"><textarea name="notes" rows=5>{{ word.notes }}</textarea></div>
+  </div>
+
+
+  <input id="counter" type="hidden" name="counter" value="{{ word.definitions|length }}">
+  <input class="float-right" type="submit" value="Save">
+  <input class="float-right" type="button" value="Cancel" onclick="cancel();">
+</form>
 {% endblock %}
 
 {% block nav %}
+<a href="{{ url_for('view_word', id=word.id.hex) }}">🔠</a>
 {% endblock %}
 
 {% block script %}
+<script>
+  function add_row(el) {
+    var prev = el.parentNode;
+    // find the previous li node, skipping text nodes
+    do prev = prev.previousSibling; while (prev && prev.nodeType !== 1);
+    var new_li = prev.cloneNode(true);
+
+    new_li = prev.parentNode.insertBefore(new_li, prev.nextSibling);
+
+    var inputs = new_li.querySelectorAll('input, select');
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].value = "";
+
+      // increment field index
+      increment_suffix(inputs[i], 'name');
+
+      // update checkbox id
+      if (inputs[i].type == 'checkbox') {
+        inputs[i].checked = false;
+        increment_suffix(inputs[i], 'id');
+      }
+    }
+
+    var labels = new_li.querySelectorAll('label');
+    for (var i = 0; i < labels.length; i++) {
+      // increment checkbox label number
+      increment_suffix(labels[i], 'for');
+    }
+
+    // update classlist id
+    var list = new_li.querySelector('[id*=classlist]');
+    increment_suffix(list, 'id');
+    list.innerHTML = "No classes selected. Hover to show class dropdown.";
+    list.classList = "text-muted small classlist";
+
+    var counter = document.querySelector('#counter');
+    counter.value = parseInt(counter.value) + 1;
+  }
+
+  function update_classlist(el) {
+    var num = el.name.split('-')[1];
+    var checkboxes = document.querySelectorAll('input[type=checkbox][name$="-' + num + '"].class-checkbox:checked');
+    var clist = document.querySelector('#classlist-' + num);
+
+    if (checkboxes.length > 0) {
+      var s = [];
+      for (var i = 0; i < checkboxes.length; i++) {
+        s.push(get_checkbox_label(checkboxes[i]));
+      }
+      clist.innerHTML = s.join(', ');
+      clist.classList = "small classlist";
+    } else {
+      clist.innerHTML = "No classes selected. Hover to show class dropdown.";
+      clist.classList = "text-muted small classlist";
+    }
+  }
+
+  function get_checkbox_label(checkbox) {
+    var id = checkbox.id;
+    return document.querySelector('label[for="' + id + '"]').innerHTML;
+  }
+
+  function cancel() {
+    location.href = "{{ url_for('view_word', id=word.id) }}";
+  }
+</script>
 {% endblock %}

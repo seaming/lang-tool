@@ -175,7 +175,7 @@ def add_word(code):
 
 
 @app.route('/lang/<code>/add_word/', methods=['POST'])
-def save_word(code):
+def add_word_post(code):
     lang = get_lang(code)
 
     nat = request.form.get('nat')
@@ -215,6 +215,77 @@ def save_word(code):
 def view_word(id):
     word = Word.get_by_id(UUID(id))
     return render_template('view_word.html', word=word)
+
+
+@app.route('/word/<id>/edit/', methods=['GET'])
+def edit_word(id):
+    word = Word.get_by_id(UUID(id))
+    return render_template('edit_word.html', word=word)
+
+
+@app.route('/word/<id>/edit/', methods=['POST'])
+def save_word(id):
+    word = Word.get_by_id(UUID(id))
+
+    word.nat = request.form.get('nat')
+    word.notes = request.form.get('notes', '')
+    word.save()
+
+    count = int(request.form.get('counter'))
+
+    definitions = []
+    i = 0
+    while i < count:
+        definition = request.form.get(f'en-{i}')
+        pos = request.form.get(f'pos-{i}')
+        def_id = request.form.get(f'id_{i}')
+
+        classes = []
+        for c in word.lang.classes():
+            if request.form.get(f'class_{c.abbr}-{i}') is not None:
+                classes.append(c.abbr)
+
+        definitions.append({
+            'id': def_id,
+            'def': definition,
+            'pos': pos,
+            'class': classes
+        })
+
+        i += 1
+
+    if not definitions:
+        flash('Words must have at least one definition', 'danger')
+        return redirect(url_for('view_word', id=id))
+
+    for i, d in enumerate(definitions):
+        if d['id']:
+            definition = Definition.get_by_id(d['id'])
+
+            if not d['def']:
+                definition.delete_instance()
+                continue
+
+            definition.en = d['def']
+            definition.order = i
+            definition.pos = d['pos']
+            definition.classes = ','.join(d['class'])
+            definition.save()
+
+        elif d['def']:
+            Definition.create(
+                id=uuid4(),
+                word=word,
+                order=i,
+                en=d['def'],
+                pos=d['pos'],
+                classes=','.join(d['class'])
+            )
+
+    flash(
+        f"Word updated!", 'success')
+
+    return redirect(url_for('view_word', id=id))
 
 
 @app.route('/word/<id>/delete/', methods=['GET', 'POST'])
