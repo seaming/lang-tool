@@ -94,6 +94,8 @@ def save_lang(code):
 
     if parent in lang.get_potential_parents():
         lang.parent = parent
+    else:
+        flash('Could not add parent language as it would create a cycle in the family tree', 'danger')
 
     lang.save()
 
