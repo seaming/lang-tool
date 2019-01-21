@@ -130,9 +130,7 @@
       inputs[i].value = "";
 
       // increment field index
-      var prefix = inputs[i].name.split('-')[0];
-      var num = parseInt(inputs[i].name.split('-')[1]);
-      inputs[i].name = prefix + "-" + (num + 1);
+      increment_suffix(inputs[i], 'name');
     }
   }
 

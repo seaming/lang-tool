@@ -32,6 +32,12 @@
 
   {% block script %}
   {% endblock %}
+  <script>
+    function increment_suffix(el, field) {
+      var items = el.getAttribute(field).split('-');
+      el.setAttribute(field, items[0] + "-" + (parseInt(items[1]) + 1));
+    }
+  </script>
 </body>
 
 {% endblock %}

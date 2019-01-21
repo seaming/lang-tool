@@ -70,28 +70,24 @@
       inputs[i].value = "";
 
       // increment field index
-      var items = inputs[i].name.split('-');
-      inputs[i].name = items[0] + "-" + (parseInt(items[1]) + 1);
+      increment_suffix(inputs[i], 'name');
 
       // update checkbox id
       if (inputs[i].type == 'checkbox') {
         inputs[i].checked = false;
-        var items = inputs[i].id.split('-');
-        inputs[i].id = items[0] + "-" + (parseInt(items[1]) + 1);
+        increment_suffix(inputs[i], 'id');
       }
     }
 
     var labels = new_li.querySelectorAll('label');
     for (var i = 0; i < labels.length; i++) {
       // increment checkbox label number
-      var items = labels[i].getAttribute('for').split('-');
-      labels[i].setAttribute('for', items[0] + "-" + (parseInt(items[1]) + 1));
+      increment_suffix(labels[i], 'for');
     }
 
     // update classlist id
     var list = new_li.querySelector('[id*=classlist]');
-    var items = list.id.split('-');
-    list.id = items[0] + "-" + (parseInt(items[1]) + 1);
+    increment_suffix(list, 'id');
     list.innerHTML = "No classes selected. Hover to show class dropdown.";
     list.classList = "text-muted small classlist";
 
