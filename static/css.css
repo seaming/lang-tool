@@ -170,6 +170,22 @@ td.small-text {
     transition: background-color 0.05s ease-in-out;
 }
 
+.family-box {
+    width: 30%;
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    margin: 15px;
+    margin-top: 2.5em;
+    padding: 15px 20px;
+    font-size: small;
+    color: #4b4b4b;
+}
+
+.family-box ul {
+    margin: 0px;
+    margin-top: 5px;
+}
+
 /************************************************************************************
  *  DICTIONARY STYLES
  ************************************************************************************/

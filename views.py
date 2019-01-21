@@ -88,6 +88,13 @@ def save_lang(code):
     lang.name = request.form.get('name', 'Unnamed language')
     lang.description = request.form.get('description', '')
     lang.use_classes = request.form.get('use_classes') is not None
+
+    parent = request.form.get('parent')
+    parent = Language.get_or_none(Language.code == parent)
+
+    if parent in lang.get_potential_parents():
+        lang.parent = parent
+
     lang.save()
 
     classifiers = {}

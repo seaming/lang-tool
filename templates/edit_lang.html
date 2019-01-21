@@ -19,6 +19,18 @@
     </div>
   </div>
 
+  <hr>
+
+  <div class="row">
+    <div class="col-2 form-label">Parent language<br></div>
+    <div class="col-10"><select class="col" name="parent">
+        <option value="0" {% if lang.parent == None %}selected{% endif %}>None</option>
+        {% for l in lang.get_potential_parents() %}
+        <option value="{{ l.code }}" {% if lang.parent.code==l.code %}selected{% endif %}>{{ l.name }} ({{ l.code }})</option>
+        {% endfor %}
+      </select></div>
+  </div>
+
   <hr><br>
 
   <div class="row">

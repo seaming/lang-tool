@@ -25,6 +25,20 @@ class Language(BaseModel):
     def classes(self):
         return self.classifiers.where(WordClassifier.type == CLASSIFIER_TYPE_CLASS)
 
+    def get_potential_parents(self):
+        daughters = set()
+
+        def get_daughters(l):
+            if l.code in daughters:
+                return
+            daughters.add(l.code)
+            for d in l.daughters:
+                get_daughters(d)
+        
+        get_daughters(self)
+        langs = Language.select().where(Language.code.not_in(daughters))
+        return langs
+
 
 class Word(BaseModel):
     id = UUIDField(primary_key=True)
