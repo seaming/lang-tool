@@ -5,6 +5,14 @@
 {% block body %}
 <form action="{{ url_for('save_set', id=set.id.hex) }}" method="POST">
 
+  <div class="row">
+    <div class="col form-label">Rules&emsp;
+      <span class="small text-muted">Individual rules on separate lines.</span></div>
+    <div class="col">
+      <textarea name="changes" rows=20>{{ set.changes }}</textarea>
+    </div>
+  </div>
+
   <input class="float-right" type="submit" value="Save">
   <input class="float-right" type="button" value="Cancel" onclick="cancel();">
 </form>

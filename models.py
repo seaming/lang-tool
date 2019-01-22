@@ -96,4 +96,4 @@ class SoundChangeSet(BaseModel):
         Language, backref='arriving_sc_sets', null=True, on_delete='SET NULL')
 
     def count_rules(self):
-        return len([l for l in self.changes.splitlines() if l.strip()])
+        return len([l for l in self.changes.splitlines() if (l.strip() and not l.strip().startswith('//'))])

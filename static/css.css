@@ -187,6 +187,10 @@ td.small-text {
     margin-top: 5px;
 }
 
+/************************************************************************************
+ *  SOUND CHANGE SET STYLES
+ ************************************************************************************/
+
 .sc-set-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -204,6 +208,51 @@ td.small-text {
     border: 1px solid #d2d2d2;
     background: #f9f9f9;
     transition: background-color 0.05s ease-in-out;
+}
+
+table.sc-ruleset {
+    border: 1px solid #f2f2f2;
+    border-radius: 10px;
+}
+
+table.sc-ruleset tbody:before {
+    content: none;
+}
+
+table.sc-ruleset tr:first-child td.rule {
+    border-top-right-radius: 10px;
+}
+
+table.sc-ruleset tr:first-child td.num {
+    border-top-left-radius: 10px;
+}
+
+table.sc-ruleset tr:last-child td.rule {
+    border-bottom-right-radius: 10px;
+}
+
+table.sc-ruleset tr:last-child td.num {
+    border-bottom-left-radius: 10px;
+}
+
+table.sc-ruleset td {
+    padding: 5px 10px;
+    border-bottom: 1px solid #f7f7f7;
+}
+
+table.sc-ruleset tr:last-child td {
+    border-bottom: none;
+}
+
+td.rule {
+    width: 100%;
+}
+
+td.num {
+    padding: 5px 20px;
+    color: #959595;
+    background: #f9f9f9;
+    border-right: 1px solid #f2f2f2;
 }
 
 /************************************************************************************

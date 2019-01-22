@@ -4,7 +4,16 @@
 
 {% block body %}
 
-<h3>{{ set.name }}</h3>
+<h3>{{ set.name }}{% if set.pronunciation %} for {{ set.parent_lang.name }}{% endif %}</h3>
+
+<table class="sc-ruleset">
+  {% for line in set.changes.splitlines() %}
+  <tr>
+    <td class="num">{{ loop.index }}</td>
+    <td class="rule{% if line.strip().startswith('//') %} text-muted{% endif %}">{{ line }}</td>
+  </tr>
+  {% endfor %}
+</table>
 
 {% endblock %}
 

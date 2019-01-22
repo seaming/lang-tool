@@ -53,6 +53,9 @@ def add_lang_post():
 
     lang = Language.create(code=code)
 
+    SoundChangeSet.create(id=uuid4(), parent_lang=lang,
+                          name='Pronunciation estimation', pronunciation=True)
+
     name = request.form.get('name')
     if name:
         lang.name = name
@@ -337,7 +340,11 @@ def edit_set(id):
     set = SoundChangeSet.get_by_id(UUID(id))
     return render_template('edit_set.html', set=set)
 
+
 @app.route('/set/<id>/edit', methods=['POST'])
 def save_set(id):
     set = SoundChangeSet.get_by_id(UUID(id))
+    set.changes = request.form.get('changes', '')
+    set.save()
+    
     return render_template('view_set.html', set=set)
