@@ -23,7 +23,8 @@
 <div class="sc-set-grid">
   {% for set in lang.sc_sets %}
   <a href="{{ url_for('view_set', id=set.id.hex) }}">
-    <div class="sc-set-box">{{ set.name }}<span class="float-right text-muted">{{ set.count_rules() }} rules</span></div>
+    <div class="sc-set-box">{{ set.name }}<span class="float-right text-muted">{{ set.count_rules() }} rule{% if
+        set.count_rules() != 1 %}s{% endif %}</span></div>
   </a>
   {% endfor %}
 </div>
