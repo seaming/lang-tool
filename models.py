@@ -79,3 +79,21 @@ class WordClassifier(BaseModel):
 
     class Meta:
         primary_key = CompositeKey('lang', 'type', 'abbr')
+
+
+class SoundChangeSet(BaseModel):
+    id = UUIDField(primary_key=True)
+
+    name = CharField(default='Unnamed set')
+    autoderive = BooleanField(default=False)
+    pronunciation = BooleanField(default=False)
+
+    changes = TextField(default='')
+
+    parent_lang = ForeignKeyField(
+        Language, backref='sc_sets', on_delete='CASCADE')
+    daughter_lang = ForeignKeyField(
+        Language, backref='arriving_sc_sets', null=True, on_delete='SET NULL')
+
+    def count_rules(self):
+        return len([l for l in self.changes.splitlines() if l.strip()])

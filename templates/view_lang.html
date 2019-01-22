@@ -18,8 +18,18 @@
 
 <div class="lang-description">{{ (lang.description or 'No description found.')|markdown }}</div>
 
+<hr>
+<h5>Sound change sets</h5>
+<div class="sc-set-grid">
+  {% for set in lang.sc_sets %}
+  <a href="{{ url_for('view_set', id=set.id.hex) }}">
+    <div class="sc-set-box">{{ set.name }}<span class="float-right text-muted">{{ set.count_rules() }} rules</span></div>
+  </a>
+  {% endfor %}
+</div>
+
 <br>
-<hr><br>
+<hr>
 
 <form action="{{ url_for('view_lang', code=lang.code) }}" method="GET">
   <div class="row center">
@@ -69,6 +79,7 @@
 <a href="{{ url_for('edit_lang', code=lang.code) }}">⚙️</a>
 <br><br>
 <a href="{{ url_for('add_word', code=lang.code) }}">➕</a>
+<a href="{{ url_for('add_set', code=lang.code) }}">🔁</a>
 {% endblock %}
 
 {% block script %}

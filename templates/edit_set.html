@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ set.name }} | Edit set{% endblock %}
+
+{% block body %}
+<form action="{{ url_for('save_set', id=set.id.hex) }}" method="POST">
+
+  <input class="float-right" type="submit" value="Save">
+  <input class="float-right" type="button" value="Cancel" onclick="cancel();">
+</form>
+{% endblock %}
+
+{% block nav %}
+<a href="{{ url_for('view_lang', code=set.parent_lang.code) }}">🔠</a>
+{% endblock %}
+
+{% block script %}
+<script>
+  function cancel() {
+    location.href = "{{ url_for('view_set', id=set.id.hex) }}";
+  }
+</script>
+{% endblock %}

@@ -3,7 +3,15 @@ from peewee import fn, JOIN
 from uuid import uuid4, UUID
 
 from app import app, db
-from models import Language, Word, Definition, WordClassifier, CLASSIFIER_TYPE_POS, CLASSIFIER_TYPE_CLASS
+from models import (
+    Language,
+    Word,
+    Definition,
+    WordClassifier,
+    SoundChangeSet,
+    CLASSIFIER_TYPE_POS,
+    CLASSIFIER_TYPE_CLASS
+)
 
 
 def get_lang(code):
@@ -21,7 +29,9 @@ def home():
     )
 
 ###############################################################################
+##                                                                           ##
 ##                               LANGUAGE VIEWS                              ##
+##                                                                           ##
 ###############################################################################
 
 
@@ -159,7 +169,9 @@ def delete_lang(code):
 
 
 ###############################################################################
+##                                                                           ##
 ##                                 WORD VIEWS                                ##
+##                                                                           ##
 ###############################################################################
 
 
@@ -299,3 +311,33 @@ def delete_word(id):
         return redirect(url_for('view_lang', code=lang.code))
 
     return render_template('delete_word.html', word=word)
+
+
+###############################################################################
+##                                                                           ##
+##                           SOUND CHANGE SET VIEWS                          ##
+##                                                                           ##
+###############################################################################
+
+@app.route('/lang/<code>/add_set/')
+def add_set(code):
+    lang = get_lang(code)
+    set = SoundChangeSet.create(id=uuid4(), parent_lang=lang)
+    return redirect(url_for('edit_set', id=set.id.hex))
+
+
+@app.route('/set/<id>')
+def view_set(id):
+    set = SoundChangeSet.get_by_id(UUID(id))
+    return render_template('view_set.html', set=set)
+
+
+@app.route('/set/<id>/edit')
+def edit_set(id):
+    set = SoundChangeSet.get_by_id(UUID(id))
+    return render_template('edit_set.html', set=set)
+
+@app.route('/set/<id>/edit', methods=['POST'])
+def save_set(id):
+    set = SoundChangeSet.get_by_id(UUID(id))
+    return render_template('view_set.html', set=set)
