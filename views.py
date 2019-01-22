@@ -346,5 +346,18 @@ def save_set(id):
     set = SoundChangeSet.get_by_id(UUID(id))
     set.changes = request.form.get('changes', '')
     set.save()
-    
+
     return render_template('view_set.html', set=set)
+
+
+@app.route('/set/<id>/delete', methods=['GET', 'POST'])
+def delete_set(id):
+    set = SoundChangeSet.get_by_id(UUID(id))
+
+    if request.method == 'POST':
+        lang = set.parent_lang
+        set.delete_instance()
+        flash('Set deleted!', 'success')
+        return redirect(url_for('view_lang', code=lang.code))
+
+    return render_template('delete_set.html', set=set)

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete {{ set.name }} | Delete set{% endblock %}
+
+{% block body %}
+
+<h3>Are you sure you want to delete {{ set.name }}?</h3>
+
+<p>
+  The set "{{ set.name }}" and its {{ set.count_rules() }} associated rules will be permanently deleted.
+</p>
+
+<form class="row" action="{{ url_for('delete_set', id=set.id.hex) }}" method="POST">
+  <input class="col big delete" type="submit" value="Delete">
+  <br><br><br><br>
+  <input class="col big" type="button" value="Cancel" onclick="cancel();">
+</form>
+
+{% endblock %}
+
+{% block nav %}
+{% endblock %}
+
+{% block script %}
+<script>
+  function cancel() {
+    location.href = "{{ url_for('view_set', id=set.id.hex) }}";
+  }
+</script>
+{% endblock %}
