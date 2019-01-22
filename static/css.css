@@ -249,6 +249,8 @@ td.rule {
 }
 
 td.num {
+    font-size: small;
+    text-align: center;
     padding: 5px 20px;
     color: #959595;
     background: #f9f9f9;
@@ -263,6 +265,20 @@ td.num {
     font-size: 200%;
     margin: 0px 0.5em 4px 0px;
     display: inline-block;
+}
+
+.pronunciation {
+    font-size: 80%;
+}
+
+.pronunciation:before {
+    content: '[';
+    margin-right: 5px;
+}
+
+.pronunciation:after {
+    content: ']';
+    margin-left: 5px;
 }
 
 .word-defs {

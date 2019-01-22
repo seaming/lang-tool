@@ -26,6 +26,15 @@ class Language(BaseModel):
     def classes(self):
         return self.classifiers.where(WordClassifier.type == CLASSIFIER_TYPE_CLASS)
 
+    def pronounce(self, word):
+        # applies pronunciation estimation ruleset to word
+        set = SoundChangeSet.get_or_none(
+            SoundChangeSet.parent_lang == self, SoundChangeSet.pronunciation == True)
+        if set:
+            return set.apply(word)
+        # we should always be able to find a set, but if we cant fall back to just the word
+        return word
+
     def get_potential_parents(self):
         daughters = set()
 
@@ -97,3 +106,6 @@ class SoundChangeSet(BaseModel):
 
     def count_rules(self):
         return len([l for l in self.changes.splitlines() if (l.strip() and not l.strip().startswith('//'))])
+
+    def apply(self, word):
+        return apply_ruleset([word], self.changes)[0]

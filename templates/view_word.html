@@ -4,7 +4,7 @@
 
 {% block body %}
 
-<div class="word-nat">{{ word.nat }}</div>
+<div class="word-nat">{{ word.nat }}&emsp;<span class="pronunciation text-muted">{{ word.lang.pronounce(word.nat) }}</span></div>
 <div class="float-right">word in <a href="{{ url_for('view_lang', code=word.lang.code) }}">{{ word.lang.name }}</a></div><br>
 {% if word.notes %}<div class="lang-description">{{ word.notes|markdown }}</div>{% endif %}
 <ol class="word-defs">
