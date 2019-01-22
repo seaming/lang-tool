@@ -25,7 +25,7 @@ def home():
 ###############################################################################
 
 
-@app.route('/add_lang/', methods=['GET'])
+@app.route('/add_lang/')
 def add_lang():
     return render_template('add_lang.html')
 
@@ -74,7 +74,7 @@ def view_lang(code):
     return render_template('view_lang.html', lang=lang, words=words)
 
 
-@app.route('/lang/<code>/settings/', methods=['GET'])
+@app.route('/lang/<code>/settings/')
 def edit_lang(code):
     lang = get_lang(code)
     return render_template(
@@ -163,7 +163,7 @@ def delete_lang(code):
 ###############################################################################
 
 
-@app.route('/lang/<code>/add_word/', methods=['GET'])
+@app.route('/lang/<code>/add_word/')
 def add_word(code):
     lang = get_lang(code)
     return render_template(
@@ -217,7 +217,7 @@ def view_word(id):
     return render_template('view_word.html', word=word)
 
 
-@app.route('/word/<id>/edit/', methods=['GET'])
+@app.route('/word/<id>/edit/')
 def edit_word(id):
     word = Word.get_by_id(UUID(id))
     return render_template('edit_word.html', word=word)
