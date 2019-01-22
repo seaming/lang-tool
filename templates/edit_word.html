@@ -128,7 +128,7 @@
   }
 
   function cancel() {
-    location.href = "{{ url_for('view_word', id=word.id) }}";
+    location.href = "{{ url_for('view_word', id=word.id.hex) }}";
   }
 </script>
 {% endblock %}
