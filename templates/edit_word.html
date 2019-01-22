@@ -29,7 +29,7 @@
         {% if word.lang.use_classes %}
         <div class="col-5 dropdown multiple-select">
           <span id="classlist-{{ dloop.index-1 }}" class="{% if not d.classes %}text-muted{% endif %} small classlist">
-            {% if d.classes %}{{ d.classes|split(',')|map('convert_class', word.lang)|join(', ') }}{% else %}No classes
+            {% if d.classes %}{{ d.classes|split('\n')|map('convert_class', word.lang)|join(', ') }}{% else %}No classes
             selected. Hover to show class dropdown.{% endif %}
           </span>
           <div class="dropdown-content">{% for c in word.lang.classes() %}

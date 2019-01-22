@@ -57,6 +57,8 @@ class Word(BaseModel):
     nat = CharField()
     notes = TextField(default='')
 
+    autoderived = BooleanField(default=False)
+
     parent = ForeignKeyField(
         'self', backref='descendants', null=True, on_delete='SET NULL')
 
@@ -94,6 +96,8 @@ class SoundChangeSet(BaseModel):
     id = UUIDField(primary_key=True)
 
     name = CharField(default='Unnamed set')
+    description = TextField(default='')
+
     autoderive = BooleanField(default=False)
     pronunciation = BooleanField(default=False)
 
@@ -101,7 +105,7 @@ class SoundChangeSet(BaseModel):
 
     parent_lang = ForeignKeyField(
         Language, backref='sc_sets', on_delete='CASCADE')
-    daughter_lang = ForeignKeyField(
+    target_lang = ForeignKeyField(
         Language, backref='arriving_sc_sets', null=True, on_delete='SET NULL')
 
     def count_rules(self):

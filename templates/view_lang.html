@@ -19,9 +19,10 @@
 <div class="lang-description">{{ (lang.description or 'No description found.')|markdown }}</div>
 
 <hr>
+
 <h5>Sound change sets</h5>
 <div class="sc-set-grid">
-  {% for set in lang.sc_sets %}
+  {% for set in (lang.sc_sets + lang.arriving_sc_sets) %}
   <a href="{{ url_for('view_set', id=set.id.hex) }}">
     <div class="sc-set-box">{{ set.name }}<span class="float-right text-muted">{{ set.count_rules() }} rule{% if
         set.count_rules() != 1 %}s{% endif %}</span></div>
@@ -60,12 +61,13 @@
   </thead>
   <tbody>
     {% for word in words %}
-    <tr class="clickable-row" href="{{ url_for('view_word', id=word.id.hex) }}" onclick="go_to_word(this);">
+    <tr class="clickable-row {% if word.autoderived %}autoderived{% endif %}" href="{{ url_for('view_word', id=word.id.hex) }}"
+      onclick="go_to_word(this);">
       <td>{{ word.nat }}</td>
       <td {% if word.definitions|map(attribute='en' )|join(';')|length> 50 %}class="small-text"{% endif %}>
         {% for d in word.definitions %}
         {{ d.en }} <span class="small text-muted">
-          ({{ d.pos }}{% if d.classes %}; {{ d.classes|split(',')|join(', ')}}{% endif %})
+          ({{ d.pos }}{% if d.classes %}; {{ d.classes|split('\n')|join(', ') }}{% endif %})
         </span>
         {% endfor %}</td>
     </tr>

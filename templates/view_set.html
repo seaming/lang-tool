@@ -6,6 +6,18 @@
 
 <h3>{{ set.name }}{% if set.pronunciation %} for {{ set.parent_lang.name }}{% endif %}</h3>
 
+{% if set.target_lang %}
+<p class="small text-muted">
+  This set derives words from <a href="{{ url_for('view_lang', code=set.parent_lang.code) }}">{{ set.parent_lang.name
+    }}</a> to <a href="{{ url_for('view_lang', code=set.target_lang.code) }}">{{ set.target_lang.name }}.</a>{% if
+  set.autoderive %} Auto-derivation is enabled.{% endif %}
+</p>
+{% endif %}
+
+{% if set.description %}
+<div class="lang-description">{{ set.description|markdown }}</div>
+{% endif %}
+
 {% if set.changes %}
 <table class="sc-ruleset">
   {% for line in set.changes.splitlines() %}

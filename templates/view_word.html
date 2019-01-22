@@ -10,7 +10,7 @@
 <ol class="word-defs">
   {% for d in word.definitions %}
   <li class="def"><span class="text-muted">({{ d.pos|convert_pos(word.lang) }}{% if d.classes %}; {{
-      d.classes|split(',')|map('convert_class', word.lang)|join(', ') }}{% endif %})</span><span class="def">{{ d.en }}</span></li>
+      d.classes|split('\n')|map('convert_class', word.lang)|join(', ') }}{% endif %})</span><span class="def">{{ d.en }}</span></li>
   {% endfor %}
 </ol>
 

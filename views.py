@@ -208,7 +208,12 @@ def add_word_post(code):
             if request.form.get(f'class_{c.abbr}-{i}') is not None:
                 classes.append(c.abbr)
 
-        definitions.append((definition, pos, classes))
+        definitions.append({
+            'def': definition,
+            'pos': pos,
+            'class': '\n'.join(classes)
+        })
+
         i += 1
 
     if not definitions:
@@ -216,12 +221,49 @@ def add_word_post(code):
         return redirect(url_for('add_word', code=lang.code))
 
     word = Word.create(id=uuid4(), lang=lang, nat=nat, notes=notes)
-    for i, d in enumerate(definitions):
-        Definition.create(id=uuid4(), word=word, order=i,
-                          en=d[0], pos=d[1], classes=','.join(d[2]))
+    with db.atomic():
+        for i, d in enumerate(definitions):
+            Definition.create(id=uuid4(), word=word, order=i,
+                              en=d['def'], pos=d['pos'], classes=d['class'])
 
     flash(
         f"Word added! Click <a href='{url_for('view_word', id=word.id.hex)}'>here</a> to see it", 'success')
+
+    derived_words = []
+    word_ids = []
+
+    for set in lang.sc_sets:
+        if set.autoderive:
+
+            new_id = uuid4()
+            word_ids.append(new_id)
+
+            derived_words.append({
+                'id': new_id,
+                'lang': set.target_lang,
+                'nat': set.apply(nat),
+                'notes': notes,
+                'autoderived': True
+            })
+
+    with db.atomic():
+        Word.insert_many(derived_words).execute()
+
+    derived_definitions = []
+
+    with db.atomic():
+        for id in word_ids:
+            for i, d in enumerate(definitions):
+                derived_definitions.append({
+                    'id': uuid4(),
+                    'word': id,
+                    'order': i,
+                    'en': d['def'],
+                    'pos': d['pos'],
+                    'classes': d['class']
+                })
+
+        Definition.insert_many(derived_definitions).execute()
 
     return redirect(url_for('add_word', code=lang.code))
 
@@ -264,7 +306,7 @@ def save_word(id):
             'id': def_id,
             'def': definition,
             'pos': pos,
-            'class': classes
+            'class': '\n'.join(classes)
         })
 
         i += 1
@@ -284,7 +326,7 @@ def save_word(id):
             definition.en = d['def']
             definition.order = i
             definition.pos = d['pos']
-            definition.classes = ','.join(d['class'])
+            definition.classes = d['class']
             definition.save()
 
         elif d['def']:
@@ -294,7 +336,7 @@ def save_word(id):
                 order=i,
                 en=d['def'],
                 pos=d['pos'],
-                classes=','.join(d['class'])
+                classes=d['class']
             )
 
     flash(
@@ -338,13 +380,29 @@ def view_set(id):
 @app.route('/set/<id>/edit')
 def edit_set(id):
     set = SoundChangeSet.get_by_id(UUID(id))
-    return render_template('edit_set.html', set=set)
+    return render_template(
+        'edit_set.html',
+        set=set,
+        valid_targets=Language.select().where(Language.code != set.parent_lang.code)
+    )
 
 
 @app.route('/set/<id>/edit', methods=['POST'])
 def save_set(id):
     set = SoundChangeSet.get_by_id(UUID(id))
     set.changes = request.form.get('changes', '')
+
+    if not set.pronunciation:
+        set.name = request.form.get('name', 'Unnamed set')
+        set.description = request.form.get('description', '')
+        set.autoderive = request.form.get('autoderive') is not None
+
+        target = request.form.get('target')
+        target = Language.get_or_none(Language.code == target)
+
+        if target != set.parent_lang or target is None:
+            set.target_lang = target
+
     set.save()
 
     return render_template('view_set.html', set=set)

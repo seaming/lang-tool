@@ -8,7 +8,7 @@
 
 <p>
   {{ word.lang.name }} &mdash; <i>{{ word.nat }}</i> {% for d in word.definitions %}{{ d.en }} <span class="small text-muted">({{
-    d.pos }}{% if d.classes %}; {{ d.classes|split(',')|join(', ') }}{% endif %})</span>; {% endfor %}
+    d.pos }}{% if d.classes %}; {{ d.classes|split('\n')|join(', ') }}{% endif %})</span>; {% endfor %}
 </p>
 
 <form class="row" action="{{ url_for('delete_word', id=word.id.hex) }}" method="POST">

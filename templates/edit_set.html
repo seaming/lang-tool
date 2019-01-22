@@ -3,7 +3,53 @@
 {% block title %}{{ set.name }} | Edit set{% endblock %}
 
 {% block body %}
+
+{% if set.pronunciation %}
+<h3>Editing {{ set.parent_lang.name }}'s pronunciation estimation</h3>
+{% endif %}
+
 <form action="{{ url_for('save_set', id=set.id.hex) }}" method="POST">
+
+  {% if not set.pronunciation %}
+  <div class="row">
+    <div class="col-2 form-label">Set name</div>
+    <div class="col-10"><input type="text" name="name" value="{{ set.name }}"></div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-2 form-label">Description<br>
+      <span class="small text-muted">Set descriptions support markdown.</span></div>
+    <div class="col-10">
+      <textarea name="description" rows=8>{{ set.description }}</textarea>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-2 form-label">Target language<br></div>
+    <div class="col-10"><select class="col" name="target">
+        <option value="0" {% if set.target_lang==None %}selected{% endif %}>None</option>
+        {% for l in valid_targets %}
+        <option value="{{ l.code }}" {% if set.target_lang.code==l.code %}selected{% endif %}>{{ l.name }} ({{ l.code
+          }})</option>
+        {% endfor %}
+      </select></div>
+  </div>
+
+  <div class="row">
+    <div class="col-2"><input type="checkbox" name="autoderive" {% if set.autoderive %}checked{% endif %} class="float-right"></div>
+    <div class="col-10 form-label">Auto-derive?<br>
+      <span class="small text-muted">Sound change sets set to auto-derive will, upon addition of words to the parent
+        language, create corresponding words in the target language after being run through the ruleset. These words
+        will be highlighted in the target language's dictionary to allow ease of review, after which they will be
+        unhighlighted.</span></div>
+  </div>
+
+  <hr>
+  {% endif %}
 
   <div class="row">
     <div class="col form-label">Rules&emsp;
