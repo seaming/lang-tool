@@ -205,9 +205,6 @@ def add_word(initial_word, definitions):
     word_rows = create_rows(initial_word)
     definition_rows = []
 
-    print(definitions)
-    print(word_rows)
-
     for w in word_rows:
         for i, d in enumerate(definitions):
             definition_rows.append({
@@ -218,8 +215,6 @@ def add_word(initial_word, definitions):
                 'pos': d['pos'],
                 'classes': d['class']
             })
-
-    print('\n\n'.join(str(x) for x in definition_rows))
 
     with db.atomic():
         Word.insert_many(word_rows).execute()
