@@ -360,6 +360,10 @@ ol.definitions > li > [class*="col"]:first-child {
     background-color: #fef0c7;
 }
 
+.autoderived:hover {
+    background-color: #f9e19a;
+}
+
 /************************************************************************************
  *  FORM AND INPUT STYLES
  ************************************************************************************/

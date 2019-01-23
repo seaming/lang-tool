@@ -1,4 +1,4 @@
-from Conlanger.sce import apply_ruleset
+from Conlanger.sce import run
 from peewee import *
 from uuid import uuid4
 
@@ -112,4 +112,4 @@ class SoundChangeSet(BaseModel):
         return len([l for l in self.changes.splitlines() if (l.strip() and not l.strip().startswith('//'))])
 
     def apply(self, word):
-        return apply_ruleset([word], self.changes)[0]
+        return run([word], self.changes)[0]

@@ -6,7 +6,7 @@
 
 {% if lang.parent or lang.daughters %}
 <div class="float-right family-box">
-  {% if lang.parent %}{{ lang.name }} is the daughter of <a href="{{ url_for('view_lang', code=lang.parent.code) }}">{{
+  {% if lang.parent %}{{ lang.name }} is a daughter of <a href="{{ url_for('view_lang', code=lang.parent.code) }}">{{
     lang.parent.name }}</a>.<br>{% endif %}
   {% if lang.daughters %}{{ lang.name }} has {{ lang.daughters|length }} daughter{{ 's' if lang.daughters|length != 1
   else '' }}<ul>{% for d in lang.daughters %}<li><a href="{{ url_for('view_lang', code=d.code) }}">{{ d.name }}</a></li>{%
