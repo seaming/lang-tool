@@ -178,8 +178,56 @@ def delete_lang(code):
 ###############################################################################
 
 
+def add_word(initial_word, definitions):
+    # w is a dictionary with fields corresponding to the Word model's fields
+
+    def create_rows(word, visited_langs=[]):
+        # creates table rows that will be mass inserted
+
+        word_rows = [word]
+        visited_langs.append(word['lang'].code)
+
+        for set in word['lang'].sc_sets:
+            # make sure to prevent derivation loops
+            if set.autoderive and set.target_lang.code not in visited_langs:
+                w = create_rows({
+                    **word,
+                    'id': uuid4(),
+                    'lang': set.target_lang,
+                    'nat': set.apply(word['nat']),
+                    'autoderived': True
+                }, visited_langs)
+
+                word_rows += w
+
+        return word_rows
+
+    word_rows = create_rows(initial_word)
+    definition_rows = []
+
+    print(definitions)
+    print(word_rows)
+
+    for w in word_rows:
+        for i, d in enumerate(definitions):
+            definition_rows.append({
+                'id': uuid4(),
+                'word': w['id'],
+                'order': i,
+                'en': d['def'],
+                'pos': d['pos'],
+                'classes': d['class']
+            })
+
+    print('\n\n'.join(str(x) for x in definition_rows))
+
+    with db.atomic():
+        Word.insert_many(word_rows).execute()
+        Definition.insert_many(definition_rows).execute()
+
+
 @app.route('/lang/<code>/add_word/')
-def add_word(code):
+def add_word_get(code):
     lang = get_lang(code)
     return render_template(
         'add_word.html',
@@ -218,54 +266,19 @@ def add_word_post(code):
 
     if not definitions:
         flash('You must enter at least one definition', 'danger')
-        return redirect(url_for('add_word', code=lang.code))
+        return redirect(url_for('add_word_get', code=lang.code))
 
-    word = Word.create(id=uuid4(), lang=lang, nat=nat, notes=notes)
-    with db.atomic():
-        for i, d in enumerate(definitions):
-            Definition.create(id=uuid4(), word=word, order=i,
-                              en=d['def'], pos=d['pos'], classes=d['class'])
+    word_id = uuid4()
+    add_word({'id': word_id, 'lang': lang,
+              'nat': nat, 'notes': notes}, definitions)
+
+
+    word = Word.get_by_id(word_id)
 
     flash(
         f"Word added! Click <a href='{url_for('view_word', id=word.id.hex)}'>here</a> to see it", 'success')
 
-    derived_words = []
-    word_ids = []
-
-    for set in lang.sc_sets:
-        if set.autoderive:
-
-            new_id = uuid4()
-            word_ids.append(new_id)
-
-            derived_words.append({
-                'id': new_id,
-                'lang': set.target_lang,
-                'nat': set.apply(nat),
-                'notes': notes,
-                'autoderived': True
-            })
-
-    with db.atomic():
-        Word.insert_many(derived_words).execute()
-
-    derived_definitions = []
-
-    with db.atomic():
-        for id in word_ids:
-            for i, d in enumerate(definitions):
-                derived_definitions.append({
-                    'id': uuid4(),
-                    'word': id,
-                    'order': i,
-                    'en': d['def'],
-                    'pos': d['pos'],
-                    'classes': d['class']
-                })
-
-        Definition.insert_many(derived_definitions).execute()
-
-    return redirect(url_for('add_word', code=lang.code))
+    return redirect(url_for('add_word_get', code=lang.code))
 
 
 @app.route('/word/<id>/')

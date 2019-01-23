@@ -6,6 +6,8 @@
 
 {% if set.pronunciation %}
 <h3>Editing {{ set.parent_lang.name }}'s pronunciation estimation</h3>
+{% else %}
+<h3>Editing {{ set.parent_lang.name }}'s set "{{ set.name }}"</h3>
 {% endif %}
 
 <form action="{{ url_for('save_set', id=set.id.hex) }}" method="POST">
