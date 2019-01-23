@@ -82,7 +82,7 @@ def view_lang(code):
     }.get(request.args.get('sort', 'nat'))
 
     words = lang.words.join(Definition).where(Definition.en.contains(
-        query) | Word.nat.contains(query)).group_by(Word.nat).order_by(sort)
+        query) | Word.nat.contains(query)).group_by(Word.id).order_by(sort)
 
     return render_template('view_lang.html', lang=lang, words=words)
 
