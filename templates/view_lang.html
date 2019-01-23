@@ -54,7 +54,7 @@
   </div>
 </form>
 
-<table>
+<table id="dictionary">
   <thead>
     <th>{{ lang.name or 'Unnamed language' }}</th>
     <th>English</th>
@@ -67,8 +67,8 @@
       <td {% if word.definitions|map(attribute='en' )|join(';')|length> 50 %}class="small-text"{% endif %}>
         {% for d in word.definitions %}
         {{ d.en }} <span class="small text-muted">
-          ({{ d.pos }}{% if d.classes %}; {{ d.classes|split('\n')|join(', ') }}{% endif %})
-        </span>
+          ({{ d.pos }}{% if d.classes %}; {{ d.classes|split('\n')|join(', ') }}{% endif %})</span>{{ "," if not
+        loop.last }}
         {% endfor %}</td>
     </tr>
     {% endfor %}
@@ -87,6 +87,11 @@
 
 {% block script %}
 <script>
+  if ((window.location.search.indexOf('q=') > -1)
+    && (window.location.search.indexOf('q=&') == -1)) {
+    window.location.hash = "dictionary";
+  }
+
   function go_to_word(el) {
     location.href = el.getAttribute('href');
   }

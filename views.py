@@ -156,6 +156,8 @@ def save_lang(code):
             c.long = v
         c.save()
 
+    flash('Successfully updated language settings!', 'success')
+
     return redirect(url_for('view_lang', code=code))
 
 
