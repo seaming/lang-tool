@@ -144,9 +144,12 @@ def save_lang(code):
         classifiers[(abbr, CLASSIFIER_TYPE_CLASS)] = long
         i += 1
 
-    WordClassifier.delete().where((WordClassifier.type == CLASSIFIER_TYPE_POS)
+    WordClassifier.delete().where((WordClassifier.lang == lang)
+                                  & (WordClassifier.type == CLASSIFIER_TYPE_POS)
                                   & (WordClassifier.abbr.not_in(pos_abbreviations))).execute()
-    WordClassifier.delete().where((WordClassifier.type == CLASSIFIER_TYPE_CLASS)
+                                  
+    WordClassifier.delete().where((WordClassifier.lang == lang)
+                                  & (WordClassifier.type == CLASSIFIER_TYPE_CLASS)
                                   & (WordClassifier.abbr.not_in(class_abbreviations))).execute()
 
     for k, v in classifiers.items():
@@ -268,7 +271,6 @@ def add_word_post(code):
     word_id = uuid4()
     add_word({'id': word_id, 'lang': lang,
               'nat': nat, 'notes': notes}, definitions)
-
 
     word = Word.get_by_id(word_id)
 
