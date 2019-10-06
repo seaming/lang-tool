@@ -4,9 +4,17 @@
 
 {% block body %}
 
+{% if word.autoderived %}
+<div>
+  <div class="flash warning">This word was autoderived, and will inherit changes to the form of its parent word.</div>
+</div>
+{% endif %}
+
 <div class="word-nat">{{ word.nat }}&emsp;<span class="pronunciation text-muted">{{ word.lang.pronounce(word.nat) }}</span></div>
 <div class="float-right">word in <a href="{{ url_for('view_lang', code=word.lang.code) }}">{{ word.lang.name }}</a></div><br>
+
 {% if word.notes %}<div class="lang-description">{{ word.notes|markdown }}</div>{% endif %}
+
 <ol class="word-defs">
   {% for d in word.definitions %}
   <li class="def"><span class="text-muted">({{ d.pos|convert_pos(word.lang) }}{% if d.classes %}; {{

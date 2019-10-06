@@ -1,5 +1,5 @@
 from flask import request, render_template, redirect, url_for, flash, abort
-from peewee import fn, JOIN
+from peewee import fn, JOIN, DoesNotExist
 from uuid import uuid4, UUID
 
 from app import app, db
@@ -147,7 +147,7 @@ def save_lang(code):
     WordClassifier.delete().where((WordClassifier.lang == lang)
                                   & (WordClassifier.type == CLASSIFIER_TYPE_POS)
                                   & (WordClassifier.abbr.not_in(pos_abbreviations))).execute()
-                                  
+
     WordClassifier.delete().where((WordClassifier.lang == lang)
                                   & (WordClassifier.type == CLASSIFIER_TYPE_CLASS)
                                   & (WordClassifier.abbr.not_in(class_abbreviations))).execute()
@@ -226,6 +226,12 @@ def add_word(initial_word, definitions):
         Word.insert_many(word_rows).execute()
         Definition.insert_many(definition_rows).execute()
 
+    for w in word_rows:
+        if 'parent' in w:
+            word = Word.get_by_id(w['id'])
+            word.parent = Word.get_by_id(w['parent'])
+            word.save()
+
 
 @app.route('/lang/<code>/add_word/')
 def add_word_get(code):
@@ -293,13 +299,36 @@ def edit_word(id):
     return render_template('edit_word.html', word=word)
 
 
+def update_descendants(word):
+    for d_word in word.descendants:
+        if d_word.autoderived:
+            try:
+                sc_set = word.lang.sc_sets.where(
+                    SoundChangeSet.target_lang == d_word.lang
+                ).get()
+
+            except DoesNotExist:
+                continue
+
+            d_word.nat = sc_set.apply(word.nat)
+            d_word.save()
+
+            update_descendants(d_word)
+
+
 @app.route('/word/<id>/edit/', methods=['POST'])
 def save_word(id):
     word = Word.get_by_id(UUID(id))
 
     word.nat = request.form.get('nat')
     word.notes = request.form.get('notes', '')
+    
+    if request.form.get('remove_autoderived'):
+        word.autoderived = False
+    
     word.save()
+
+    update_descendants(word)
 
     count = int(request.form.get('counter'))
 

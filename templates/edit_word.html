@@ -53,6 +53,12 @@
     <div class="col"><textarea name="notes" rows=5>{{ word.notes }}</textarea></div>
   </div>
 
+  {% if word.autoderived %}
+  <div style="display: inline-block">
+    <input type="checkbox" id="remove_autoderived" name="remove_autoderived">
+    <label class="checkbox-label" for="remove_autoderived">Remove autoderived designation from this word?</label>
+  </div>
+  {% endif %}
 
   <input id="counter" type="hidden" name="counter" value="{{ word.definitions|length }}">
   <input class="float-right" type="submit" value="Save">
