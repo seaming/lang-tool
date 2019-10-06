@@ -34,11 +34,6 @@
 {% if word.descendants %}
 <h3>Derived words</h3>
 <table class="no-head">
-  <!-- <thead>
-    <th></th>
-    <th></th>
-    <th></th>
-  </thead> -->
   <tbody>
     {% for w in word.descendants %}
     <tr class="clickable-row {% if w.autoderived %}autoderived{% endif %}" href="{{ url_for('view_word', id=w.id.hex) }}" onclick="go_to_word(this);">
