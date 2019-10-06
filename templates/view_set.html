@@ -18,6 +18,17 @@
 <div class="lang-description">{{ set.description|markdown }}</div>
 {% endif %}
 
+<div class="row">
+  <div class="col-6">
+    <div class="form-label">Test set&emsp;
+      <span class="small text-muted">Individual words on separate lines.</span></div>
+    <textarea id="test-set-input" rows=5 onkeyup="test_ruleset()"></textarea>
+  </div>
+  <div class="col-6">
+    <table id="test-set-output" class="sc-ruleset"></table>
+  </div>
+</div>
+
 {% if set.changes %}
 <table class="sc-ruleset">
   {% for line in set.changes.splitlines() %}
@@ -38,4 +49,39 @@
 <a href="{{ url_for('edit_set', id=set.id.hex) }}">✏️</a>
 <br><br>
 <a href="{{ url_for('delete_set', id=set.id.hex) }}">🗑</a>
+{% endblock %}
+
+{% block script %}
+<script>
+  function test_ruleset() {
+    var input = document.getElementById('test-set-input').value;
+    if (input.trim().length == 0) {
+      document.getElementById('test-set-output').innerText = "";
+      return;
+    }
+
+    var url = 'http://' + window.location.host + encodeURI('/apply_ruleset?set_id=' + '{{ set.id }}' + '&words=' + input);
+
+    function callback(response) {
+      var in_words = input.split('\n')
+      var out_words = response.split('\n')
+      var response = []
+
+      for (var i = 0; i < in_words.length; i++) {
+        if (in_words[i].trim().length == 0) { continue; }
+        response.push('<tr><td class="rule">' + in_words[i] + ' → ' + out_words[i] + '</td></tr>');
+      }
+
+      document.getElementById('test-set-output').innerHTML = response.join('\n');
+    }
+
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function () {
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+        callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", url, true);
+    xmlHttp.send(null);
+  }
+</script>
 {% endblock %}

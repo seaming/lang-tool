@@ -199,7 +199,7 @@ def add_word(initial_word, definitions):
                     **word,
                     'id': uuid4(),
                     'lang': sc_set.target_lang,
-                    'nat': sc_set.apply(word['nat']),
+                    'nat': sc_set.apply(word['nat'])[0],
                     'parent': word['id'],
                     'autoderived': True
                 }, visited_langs)
@@ -310,7 +310,7 @@ def update_descendants(word):
             except DoesNotExist:
                 continue
 
-            d_word.nat = sc_set.apply(word.nat)
+            d_word.nat = sc_set.apply(word.nat)[0]
             d_word.save()
 
             update_descendants(d_word)
@@ -405,6 +405,12 @@ def delete_word(id):
 ##                           SOUND CHANGE SET VIEWS                          ##
 ##                                                                           ##
 ###############################################################################
+
+@app.route('/apply_ruleset', methods=['GET'])
+def apply_ruleset():
+    sc_set = SoundChangeSet.get_by_id(request.args.get('set_id'))
+    words = request.args.get('words')
+    return '\n'.join(sc_set.apply(words))
 
 @app.route('/lang/<code>/add_set/')
 def add_set(code):

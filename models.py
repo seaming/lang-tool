@@ -111,5 +111,7 @@ class SoundChangeSet(BaseModel):
     def count_rules(self):
         return len([l for l in self.changes.splitlines() if (l.strip() and not l.strip().startswith('//'))])
 
-    def apply(self, word):
-        return run([word], self.changes)[0]
+    def apply(self, words):
+        if isinstance(words, str):
+            words = words.splitlines()
+        return run(words, self.changes)

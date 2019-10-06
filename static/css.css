@@ -229,12 +229,6 @@ td.small-text {
     border-radius: 8px;
 }
 
-.sc-set-box:hover {
-    border: 1px solid #d2d2d2;
-    background: #f9f9f9;
-    transition: background-color 0.05s ease-in-out;
-}
-
 table.sc-ruleset {
     border: 1px solid #f2f2f2;
     border-radius: 10px;
@@ -244,19 +238,19 @@ table.sc-ruleset tbody:before {
     content: none;
 }
 
-table.sc-ruleset tr:first-child td.rule {
+table.sc-ruleset tr:first-child td:last-child {
     border-top-right-radius: 10px;
 }
 
-table.sc-ruleset tr:first-child td.num {
+table.sc-ruleset tr:first-child td:first-child {
     border-top-left-radius: 10px;
 }
 
-table.sc-ruleset tr:last-child td.rule {
+table.sc-ruleset tr:last-child td:last-child {
     border-bottom-right-radius: 10px;
 }
 
-table.sc-ruleset tr:last-child td.num {
+table.sc-ruleset tr:last-child td:first-child {
     border-bottom-left-radius: 10px;
 }
 
@@ -267,6 +261,12 @@ table.sc-ruleset td {
 
 table.sc-ruleset tr:last-child td {
     border-bottom: none;
+}
+
+.sc-set-box:hover {
+    border: 1px solid #d2d2d2;
+    background: #f9f9f9;
+    transition: background-color 0.05s ease-in-out;
 }
 
 td.rule {
@@ -282,6 +282,15 @@ td.num {
     color: #959595;
     background: #f9f9f9;
     border-right: 1px solid #f2f2f2;
+}
+
+#test-set-input {
+    resize: vertical;
+}
+
+#test-set-output {
+    margin: 45px 0px 0px 10px;
+    line-height: 1.2em;
 }
 
 /************************************************************************************
