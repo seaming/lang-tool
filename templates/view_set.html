@@ -22,7 +22,7 @@
   <div class="col-6">
     <div class="form-label">Test set&emsp;
       <span class="small text-muted">Individual words on separate lines.</span></div>
-    <textarea id="test-set-input" rows=5 onkeyup="test_ruleset()"></textarea>
+    <textarea id="test-set-input" rows=5 onkeyup="start_timer()" onkeydown="clearTimeout(typing_timer);"></textarea>
   </div>
   <div class="col-6">
     <table id="test-set-output" class="sc-ruleset"></table>
@@ -53,6 +53,13 @@
 
 {% block script %}
 <script>
+  var typing_timer;
+
+  function start_timer() {
+    clearTimeout(typing_timer);
+    typing_timer = setTimeout(test_ruleset, 1000);
+  }
+
   function test_ruleset() {
     var input = document.getElementById('test-set-input').value;
     if (input.trim().length == 0) {
