@@ -83,7 +83,7 @@
 
     new_li = prev.parentNode.insertBefore(new_li, prev.nextSibling);
 
-    var inputs = new_li.querySelectorAll('input, select');
+    var inputs = new_li.querySelectorAll('input, select, textarea');
     for (var i = 0; i < inputs.length; i++) {
       inputs[i].value = "";
 

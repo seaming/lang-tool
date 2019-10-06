@@ -410,7 +410,7 @@ def save_word(id):
                 en=d['def'],
                 pos=d['pos'],
                 classes=d['class'],
-                notes=d['note']
+                notes=d['notes']
             )
 
     flash(
