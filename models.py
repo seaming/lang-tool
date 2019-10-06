@@ -28,10 +28,10 @@ class Language(BaseModel):
 
     def pronounce(self, word):
         # applies pronunciation estimation ruleset to word
-        set = SoundChangeSet.get_or_none(
+        sc_set = SoundChangeSet.get_or_none(
             SoundChangeSet.parent_lang == self, SoundChangeSet.pronunciation == True)
-        if set:
-            return set.apply(word)
+        if sc_set:
+            return sc_set.apply(word)[0]
         # we should always be able to find a set, but if we cant fall back to just the word
         return word
 
