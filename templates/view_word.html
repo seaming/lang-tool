@@ -14,6 +14,40 @@
   {% endfor %}
 </ol>
 
+{% if word.parent %}
+<p>
+  This word comes from <a href="{{ url_for('view_lang', code=word.parent.lang.code) }}">{{ word.parent.lang.name }}</a>
+  &mdash; <a href="{{ url_for('view_word', id=word.parent.id) }}"><i>{{ word.parent.nat }}</i></a> {% for d in
+  word.parent.definitions %}{{ d.en }} <span class="small text-muted">({{ d.pos }}{% if d.classes %}; {{
+    d.classes|split('\n')|join(', ') }}{% endif %})</span>; {% endfor %}
+</p>
+{% endif %}
+
+{% if word.descendants %}
+<h3>Derived words</h3>
+<table class="no-head">
+  <!-- <thead>
+    <th></th>
+    <th></th>
+    <th></th>
+  </thead> -->
+  <tbody>
+    {% for w in word.descendants %}
+    <tr class="clickable-row {% if w.autoderived %}autoderived{% endif %}" href="{{ url_for('view_word', id=w.id.hex) }}" onclick="go_to_word(this);">
+      <td>{{ w.lang.name }}</td>
+      <td>{{ w.nat }}</td>
+      <td {% if w.definitions|map(attribute='en' )|join(';')|length> 50 %}class="small-text"{% endif %}>
+        {% for d in w.definitions %}
+        {{ d.en }} <span class="small text-muted">
+          ({{ d.pos }}{% if d.classes %}; {{ d.classes|split('\n')|join(', ') }}{% endif %})</span>{{ "," if not
+        loop.last }}
+        {% endfor %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
 {% endblock %}
 
 {% block nav %}
@@ -21,4 +55,12 @@
 <a href="{{ url_for('edit_word', id=word.id.hex) }}">✏️</a>
 <br><br>
 <a href="{{ url_for('delete_word', id=word.id.hex) }}">🗑</a>
+{% endblock %}
+
+{% block script %}
+<script>
+  function go_to_word(el) {
+    location.href = el.getAttribute('href');
+  }
+</script>
 {% endblock %}
