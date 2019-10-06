@@ -293,6 +293,24 @@ def view_word(id):
     return render_template('view_word.html', word=word)
 
 
+@app.route('/derive_word/<id>/<set_id>')
+def derive_word(id, set_id):
+    word = Word.get_by_id(UUID(id))
+    sc_set = SoundChangeSet.get_by_id(UUID(set_id))
+
+    definitions = [{'def': d.en, 'pos': d.pos, 'class': d.classes} for d in word.definitions]
+
+    word_id = uuid4()
+    add_word({'id': word_id, 'lang': sc_set.target_lang, 'parent': word,
+              'nat': sc_set.apply(word.nat)[0], 'notes': word.notes}, definitions)
+
+    word = Word.get_by_id(word_id)
+
+    flash(f"Word added!", 'success')
+
+    return redirect(url_for('view_word', id=word.id))
+
+
 @app.route('/word/<id>/edit/')
 def edit_word(id):
     word = Word.get_by_id(UUID(id))

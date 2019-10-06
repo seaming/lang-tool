@@ -35,6 +35,9 @@ class Language(BaseModel):
         # we should always be able to find a set, but if we cant fall back to just the word
         return word
 
+    def get_derivation_sets(self):
+        return self.sc_sets.where(SoundChangeSet.pronunciation == False)
+
     def get_potential_parents(self):
         daughters = set()
 

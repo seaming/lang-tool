@@ -56,6 +56,17 @@
 </table>
 {% endif %}
 
+{% if word.lang.get_derivation_sets() %}
+<h3>Derive this word</h3>
+<div class="sc-set-grid">
+  {% for set in word.lang.get_derivation_sets() %}
+  <a href="{{ url_for('derive_word', id=word.id, set_id=set.id) }}">
+    <div class="sc-set-box">{{ set.name }}</div>
+  </a>
+  {% endfor %}
+</div>
+{% endif %}
+
 {% endblock %}
 
 {% block nav %}
