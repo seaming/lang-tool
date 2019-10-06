@@ -32,6 +32,9 @@
             {% endfor %}</div>
         </div>
         {% endif %}
+        <div class="col">
+          <textarea name="notes-0" class="word-notes" rows=1 placeholder="Notes"></textarea>
+        </div>
       </li>
 
       <li class="entry" style="list-style-type:none;">
@@ -39,12 +42,6 @@
       </li>
     </ol>
   </div>
-
-  <div class="row">
-    <div class="col form-label">Notes&emsp;<span class="small text-muted">Word notes support markdown.</span></div>
-    <div class="col"><textarea name="notes" rows=5></textarea></div>
-  </div>
-
 
   <input id="counter" type="hidden" name="counter" value="1">
   <input class="float-right" type="submit" value="Save">
@@ -65,8 +62,9 @@
 
     new_li = prev.parentNode.insertBefore(new_li, prev.nextSibling);
 
-    var inputs = new_li.querySelectorAll('input, select');
+    var inputs = new_li.querySelectorAll('input, select, textarea');
     for (var i = 0; i < inputs.length; i++) {
+      console.log(inputs[i]);
       inputs[i].value = "";
 
       // increment field index

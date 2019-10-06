@@ -219,7 +219,8 @@ def add_word(initial_word, definitions):
                 'order': i,
                 'en': d['def'],
                 'pos': d['pos'],
-                'classes': d['class']
+                'classes': d['class'],
+                'notes': d['notes']
             })
 
     with db.atomic():
@@ -249,13 +250,18 @@ def add_word_post(code):
     lang = get_lang(code)
 
     nat = request.form.get('nat')
-    notes = request.form.get('notes', '')
     count = int(request.form.get('counter'))
 
     definitions = []
+    notes = []
     i = 0
     while i < count:
         definition = request.form.get(f'en-{i}')
+        if not definition.strip():
+            i += 1
+            continue
+
+        notes = request.form.get(f'notes-{i}')
         pos = request.form.get(f'pos-{i}')
 
         classes = []
@@ -266,7 +272,8 @@ def add_word_post(code):
         definitions.append({
             'def': definition,
             'pos': pos,
-            'class': '\n'.join(classes)
+            'class': '\n'.join(classes),
+            'notes': notes
         })
 
         i += 1
@@ -276,8 +283,7 @@ def add_word_post(code):
         return redirect(url_for('add_word_get', code=lang.code))
 
     word_id = uuid4()
-    add_word({'id': word_id, 'lang': lang,
-              'nat': nat, 'notes': notes}, definitions)
+    add_word({'id': word_id, 'lang': lang, 'nat': nat}, definitions)
 
     word = Word.get_by_id(word_id)
 
@@ -298,11 +304,11 @@ def derive_word(id, set_id):
     word = Word.get_by_id(UUID(id))
     sc_set = SoundChangeSet.get_by_id(UUID(set_id))
 
-    definitions = [{'def': d.en, 'pos': d.pos, 'class': d.classes} for d in word.definitions]
+    definitions = [{'def': d.en, 'pos': d.pos, 'class': d.classes, 'notes': d.notes} for d in word.definitions]
 
     word_id = uuid4()
     add_word({'id': word_id, 'lang': sc_set.target_lang, 'parent': word,
-              'nat': sc_set.apply(word.nat)[0], 'notes': word.notes}, definitions)
+              'nat': sc_set.apply(word.nat)[0]}, definitions)
 
     word = Word.get_by_id(word_id)
 
@@ -339,7 +345,6 @@ def save_word(id):
     word = Word.get_by_id(UUID(id))
 
     word.nat = request.form.get('nat')
-    word.notes = request.form.get('notes', '')
     
     if request.form.get('remove_autoderived'):
         word.autoderived = False
@@ -351,9 +356,15 @@ def save_word(id):
     count = int(request.form.get('counter'))
 
     definitions = []
+    notes = []
     i = 0
     while i < count:
         definition = request.form.get(f'en-{i}')
+        if not definition.strip():
+            i += 1
+            continue
+
+        notes = request.form.get(f'notes-{i}')
         pos = request.form.get(f'pos-{i}')
         def_id = request.form.get(f'id_{i}')
 
@@ -366,7 +377,8 @@ def save_word(id):
             'id': def_id,
             'def': definition,
             'pos': pos,
-            'class': '\n'.join(classes)
+            'class': '\n'.join(classes),
+            'notes': notes
         })
 
         i += 1
@@ -387,6 +399,7 @@ def save_word(id):
             definition.order = i
             definition.pos = d['pos']
             definition.classes = d['class']
+            definition.notes = d['notes']
             definition.save()
 
         elif d['def']:
@@ -396,7 +409,8 @@ def save_word(id):
                 order=i,
                 en=d['def'],
                 pos=d['pos'],
-                classes=d['class']
+                classes=d['class'],
+                notes=d['note']
             )
 
     flash(

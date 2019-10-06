@@ -39,6 +39,9 @@
             {% endfor %}</div>
         </div>
         {% endif %}
+        <div class="col">
+          <textarea name="notes-{{ dloop.index-1 }}" class="word-notes" rows=1 placeholder="Notes">{{ d.notes }}</textarea>
+        </div>
       </li>
       {% endfor %}
 

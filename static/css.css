@@ -385,6 +385,10 @@ ol.definitions > li > [class*="col"]:first-child {
     display: inline-block;
 }
 
+.word-notes {
+    resize: vertical;
+}
+
 .dropdown {
     position: relative;
     display: inline-block;

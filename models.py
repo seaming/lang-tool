@@ -58,7 +58,6 @@ class Word(BaseModel):
 
     lang = ForeignKeyField(Language, backref='words', on_delete='CASCADE')
     nat = CharField()
-    notes = TextField(default='')
 
     autoderived = BooleanField(default=False)
 
@@ -75,6 +74,7 @@ class Definition(BaseModel):
     en = CharField()
     pos = CharField()
     classes = CharField()
+    notes = TextField(default='')
 
 
 CLASSIFIER_TYPE_POS = 1
