@@ -360,10 +360,6 @@ def save_word(id):
     i = 0
     while i < count:
         definition = request.form.get(f'en-{i}')
-        if not definition.strip():
-            i += 1
-            continue
-
         notes = request.form.get(f'notes-{i}')
         pos = request.form.get(f'pos-{i}')
         def_id = request.form.get(f'id_{i}')
@@ -385,7 +381,7 @@ def save_word(id):
 
     if not definitions:
         flash('Words must have at least one definition', 'danger')
-        return redirect(url_for('view_word', id=id))
+        return redirect(url_for('edit_word', id=id))
 
     for i, d in enumerate(definitions):
         if d['id']:
