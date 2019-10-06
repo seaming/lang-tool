@@ -192,14 +192,15 @@ def add_word(initial_word, definitions):
         word_rows = [word]
         visited_langs.append(word['lang'].code)
 
-        for set in word['lang'].sc_sets:
+        for sc_set in word['lang'].sc_sets:
             # make sure to prevent derivation loops
-            if set.autoderive and set.target_lang.code not in visited_langs:
+            if sc_set.autoderive and sc_set.target_lang.code not in visited_langs:
                 w = create_rows({
                     **word,
                     'id': uuid4(),
-                    'lang': set.target_lang,
-                    'nat': set.apply(word['nat']),
+                    'lang': sc_set.target_lang,
+                    'nat': sc_set.apply(word['nat']),
+                    'parent': word['id'],
                     'autoderived': True
                 }, visited_langs)
 
@@ -379,55 +380,55 @@ def delete_word(id):
 @app.route('/lang/<code>/add_set/')
 def add_set(code):
     lang = get_lang(code)
-    set = SoundChangeSet.create(id=uuid4(), parent_lang=lang)
-    return redirect(url_for('edit_set', id=set.id.hex))
+    sc_set = SoundChangeSet.create(id=uuid4(), parent_lang=lang)
+    return redirect(url_for('edit_set', id=sc_set.id.hex))
 
 
 @app.route('/set/<id>')
 def view_set(id):
-    set = SoundChangeSet.get_by_id(UUID(id))
-    return render_template('view_set.html', set=set)
+    sc_set = SoundChangeSet.get_by_id(UUID(id))
+    return render_template('view_set.html', set=sc_set)
 
 
 @app.route('/set/<id>/edit')
 def edit_set(id):
-    set = SoundChangeSet.get_by_id(UUID(id))
+    sc_set = SoundChangeSet.get_by_id(UUID(id))
     return render_template(
         'edit_set.html',
-        set=set,
-        valid_targets=Language.select().where(Language.code != set.parent_lang.code)
+        set=sc_set,
+        valid_targets=Language.select().where(Language.code != sc_set.parent_lang.code)
     )
 
 
 @app.route('/set/<id>/edit', methods=['POST'])
 def save_set(id):
-    set = SoundChangeSet.get_by_id(UUID(id))
-    set.changes = request.form.get('changes', '')
+    sc_set = SoundChangeSet.get_by_id(UUID(id))
+    sc_set.changes = request.form.get('changes', '')
 
-    if not set.pronunciation:
-        set.name = request.form.get('name', 'Unnamed set')
-        set.description = request.form.get('description', '')
-        set.autoderive = request.form.get('autoderive') is not None
+    if not sc_set.pronunciation:
+        sc_set.name = request.form.get('name', 'Unnamed set')
+        sc_set.description = request.form.get('description', '')
+        sc_set.autoderive = request.form.get('autoderive') is not None
 
         target = request.form.get('target')
         target = Language.get_or_none(Language.code == target)
 
-        if target != set.parent_lang or target is None:
-            set.target_lang = target
+        if target != sc_set.parent_lang or target is None:
+            sc_set.target_lang = target
 
-    set.save()
+    sc_set.save()
 
-    return render_template('view_set.html', set=set)
+    return render_template('view_set.html', set=sc_set)
 
 
 @app.route('/set/<id>/delete', methods=['GET', 'POST'])
 def delete_set(id):
-    set = SoundChangeSet.get_by_id(UUID(id))
+    sc_set = SoundChangeSet.get_by_id(UUID(id))
 
     if request.method == 'POST':
-        lang = set.parent_lang
-        set.delete_instance()
+        lang = sc_set.parent_lang
+        sc_set.delete_instance()
         flash('Set deleted!', 'success')
         return redirect(url_for('view_lang', code=lang.code))
 
-    return render_template('delete_set.html', set=set)
+    return render_template('delete_set.html', set=sc_set)
