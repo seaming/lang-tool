@@ -289,8 +289,17 @@ td.num {
 }
 
 #test-set-output {
-    margin: 45px 0px 0px 10px;
+    margin: 45px 0px 10px 10px;
     line-height: 1.2em;
+}
+
+#test-set-output td {
+    font-family: monospace;
+    font-size: 110%;
+}
+
+#test-set-output td:last-child {
+    width: 100%;
 }
 
 /************************************************************************************
@@ -429,6 +438,8 @@ textarea {
     font-size: 95%;
     border-radius: 4px;
     border: 1px solid #e6e6e6;
+    font-family: "Charis SIL";
+    line-height: 1.4em;
 }
 
 textarea[name=description] {
