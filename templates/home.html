@@ -2,7 +2,12 @@
 
 {% block body %}
 {% for lang in langs %}
-<a class="lang-button" href="{{ url_for('view_lang', code=lang.code) }}">{{ lang.name }}</a>
+<a class="lang-button" href="{{ url_for('view_lang', code=lang.code) }}">
+  <div class="name">{{ lang.name }}
+    <span class="float-right small text-muted">{{ lang.words|count }} words</span>
+  </div>{% if lang.description %}
+  <div class="lang-description">{{ lang.description|char_count(500) }}</div>{% endif %}
+</a>
 {% endfor %}
 
 <br>

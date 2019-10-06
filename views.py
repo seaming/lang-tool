@@ -406,11 +406,13 @@ def delete_word(id):
 ##                                                                           ##
 ###############################################################################
 
+
 @app.route('/apply_ruleset', methods=['GET'])
 def apply_ruleset():
     sc_set = SoundChangeSet.get_by_id(request.args.get('set_id'))
     words = request.args.get('words')
     return '\n'.join(sc_set.apply(words))
+
 
 @app.route('/lang/<code>/add_set/')
 def add_set(code):

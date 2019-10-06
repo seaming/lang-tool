@@ -28,6 +28,17 @@ def split(text, sep):
 
 
 @app.template_filter()
+def char_count(text, n):
+    sentences = list(reversed(text.split('. ')))
+    result = sentences.pop()
+    while len('. '.join(result)) <= n and sentences:
+        result += '. ' + sentences.pop()
+    if not result.endswith('.'):
+        result += '...' if sentences else '.'
+    return result
+
+
+@app.template_filter()
 def convert_pos(abbr, lang):
     c = WordClassifier.get_or_none(WordClassifier.lang == lang, WordClassifier.type ==
                                CLASSIFIER_TYPE_POS, WordClassifier.abbr == abbr)

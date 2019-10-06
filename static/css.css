@@ -191,6 +191,16 @@ td.small-text {
     transition: background-color 0.05s ease-in-out;
 }
 
+.lang-button .name {
+    text-align: left;
+    width: 100%;
+}
+
+.lang-button .lang-description {
+    margin-top: 10px;
+    font-size: small;
+}
+
 .lang-description {
     text-align: justify;
     text-indent: 1.5em;
