@@ -16,7 +16,7 @@
 
 <h2>{{ lang.name }}</h2>
 
-<div class="lang-description">{{ (lang.description or 'No description found.')|markdown }}</div>
+<div class="user-content lang-description">{{ (lang.description or 'No description found.')|markdown }}</div>
 
 <hr>
 
@@ -67,7 +67,7 @@
       <td {% if word.definitions|map(attribute='en' )|join(';')|length> 50 %}class="small-text"{% endif %}>
         {% for d in word.definitions %}
         {{ d.en }} <span class="small text-muted">
-          ({{ d.pos }}{% if d.classes %}; {{ d.classes|split('\n')|join(', ') }}{% endif %})</span>{{ "," if not
+          ({{ d.pos }}{% if d.classes %}; {{ d.classes|split('\n')|join(', ') }}{% endif %})</span>{{ "; " if not
         loop.last }}
         {% endfor %}</td>
     </tr>

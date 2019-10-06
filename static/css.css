@@ -4,8 +4,9 @@
 
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; */
+    font-family: "Charis SIL";
 }
 
 .container {
@@ -142,6 +143,10 @@ table td {
     border-bottom: 1px solid #f2f2f2;
 }
 
+table.no-head tr:first-child td {
+    border-top: 1px solid #f2f2f2;
+}
+
 td.small {
     width: 1%;
     max-width: 10%;
@@ -151,11 +156,26 @@ td.small-text {
     font-size: small;
 }
 
+.user-content table {
+    margin-left: auto;
+    margin-right: auto;
+    width: min-content;
+}
+
+.user-content table th {
+    background: #f2f2f2;
+    padding: 8px 6px 6px 6px;
+}
+
+.user-content tbody:before {
+    content: "";
+}
+
 /************************************************************************************
  *  LANGUAGE STYLES
  ************************************************************************************/
 
- .lang-button {
+.lang-button {
     border: 1px solid #e6e6e6;
     border-radius: 10px;
     padding: 1em 1.5em;
@@ -171,12 +191,17 @@ td.small-text {
     transition: background-color 0.05s ease-in-out;
 }
 
+.lang-description {
+    text-align: justify;
+    text-indent: 1.5em;
+}
+
 .family-box {
-    width: 30%;
+    display: inline-block;
+    max-width: 40%;
     border: 1px solid #e6e6e6;
     border-radius: 8px;
-    margin: 15px;
-    margin-top: 2.5em;
+    margin: 2.5em 15px 15px 25px;
     padding: 15px 20px;
     font-size: small;
     color: #4b4b4b;
@@ -184,7 +209,7 @@ td.small-text {
 
 .family-box ul {
     margin: 0px;
-    margin-top: 5px;
+    margin-top: 2px;
 }
 
 /************************************************************************************
@@ -246,6 +271,8 @@ table.sc-ruleset tr:last-child td {
 
 td.rule {
     width: 100%;
+    font-family: monospace;
+    font-size: 110%;
 }
 
 td.num {
@@ -353,15 +380,14 @@ ol.definitions > li > [class*="col"]:first-child {
 
 .checkbox-label {
     display: inline-block;
-    width: 100%;
 }
 
 .autoderived {
-    background-color: #fef0c7;
+    background-color: #fff3cd;
 }
 
 .autoderived:hover {
-    background-color: #f9e19a;
+    background-color: #ffeeba;
 }
 
 /************************************************************************************
@@ -384,6 +410,7 @@ input {
     font-size: 95%;
     border-radius: 4px;
     border: 1px solid #e6e6e6;
+    font-family: "Charis SIL";
 }
 
 textarea {
@@ -393,6 +420,10 @@ textarea {
     font-size: 95%;
     border-radius: 4px;
     border: 1px solid #e6e6e6;
+}
+
+textarea[name=description] {
+    resize: vertical;
 }
 
 select {
@@ -407,6 +438,7 @@ select {
     font-size: 95%;
     border-radius: 4px;
     border: 1px solid #e6e6e6;
+    font-family: "Charis SIL";
 }
 
 select[multiple] {
