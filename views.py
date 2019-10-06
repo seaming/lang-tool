@@ -308,7 +308,7 @@ def derive_word(id, set_id):
 
     flash(f"Word added!", 'success')
 
-    return redirect(url_for('view_word', id=word.id))
+    return redirect(url_for('edit_word', id=word.id))
 
 
 @app.route('/word/<id>/edit/')
