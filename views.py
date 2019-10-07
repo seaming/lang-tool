@@ -251,9 +251,9 @@ def add_word_post(code):
 
     nat = request.form.get('nat')
     count = int(request.form.get('counter'))
+    word_notes = request.form.get('word_notes') or ''
 
     definitions = []
-    notes = []
     i = 0
     while i < count:
         definition = request.form.get(f'en-{i}')
@@ -261,7 +261,7 @@ def add_word_post(code):
             i += 1
             continue
 
-        notes = request.form.get(f'notes-{i}')
+        notes = request.form.get(f'def_notes-{i}') or ''
         pos = request.form.get(f'pos-{i}')
 
         classes = []
@@ -283,7 +283,7 @@ def add_word_post(code):
         return redirect(url_for('add_word_get', code=lang.code))
 
     word_id = uuid4()
-    add_word({'id': word_id, 'lang': lang, 'nat': nat}, definitions)
+    add_word({'id': word_id, 'lang': lang, 'nat': nat, 'notes': word_notes}, definitions)
 
     word = Word.get_by_id(word_id)
 
@@ -345,6 +345,7 @@ def save_word(id):
     word = Word.get_by_id(UUID(id))
 
     word.nat = request.form.get('nat')
+    word.notes = request.form.get('word_notes') or ''
     
     if request.form.get('remove_autoderived'):
         word.autoderived = False
@@ -356,11 +357,10 @@ def save_word(id):
     count = int(request.form.get('counter'))
 
     definitions = []
-    notes = []
     i = 0
     while i < count:
         definition = request.form.get(f'en-{i}')
-        notes = request.form.get(f'notes-{i}')
+        notes = request.form.get(f'def_notes-{i}') or ''
         pos = request.form.get(f'pos-{i}')
         def_id = request.form.get(f'id_{i}')
 

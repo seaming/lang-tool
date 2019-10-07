@@ -40,7 +40,7 @@
         </div>
         {% endif %}
         <div class="col">
-          <textarea name="notes-{{ dloop.index-1 }}" class="word-notes" rows=1 placeholder="Notes">{{ d.notes }}</textarea>
+          <textarea name="def_notes-{{ dloop.index-1 }}" class="word-notes" rows=1 placeholder="Notes">{{ d.notes }}</textarea>
         </div>
       </li>
       {% endfor %}
@@ -53,7 +53,7 @@
 
   <div class="row">
     <div class="col form-label">Notes&emsp;<span class="small text-muted">Word notes support markdown.</span></div>
-    <div class="col"><textarea name="notes" rows=5>{{ word.notes }}</textarea></div>
+    <div class="col"><textarea name="word_notes" rows=5>{{ word.notes }}</textarea></div>
   </div>
 
   {% if word.autoderived %}

@@ -58,6 +58,7 @@ class Word(BaseModel):
 
     lang = ForeignKeyField(Language, backref='words', on_delete='CASCADE')
     nat = CharField()
+    notes = TextField(default='')
 
     autoderived = BooleanField(default=False)
 
