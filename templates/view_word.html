@@ -80,11 +80,10 @@
       href="{{ url_for('view_word', id=w.id.hex) }}" onclick="linkToWord(this);">
       <td>{{ w.lang.name }}</td>
       <td>{{ w.nat }}</td>
-      <td {% if w.definitions|map(attribute='en' )|join(';')|length> 50 %}class="small-text" {% endif %}>
-        {% for d in w.definitions %}
-        {{ d.en }} <span class="small text-muted">
-          ({{ d.pos }}{% if d.classes %}; {{ d.classes|split('\n')|join(', ') }}{% endif %})</span>{{ "," if not
-        loop.last }}
+      <td {% if w.definitions|map(attribute='en' )|join(';')|length> 50 %}class="small"{% endif %}>
+        {% for d in w.definitions %}{{ d.en }}
+        <span class="small text-muted">
+          ({{ d.pos }}{% if d.classes %}; {{ d.classes|split('\n')|join(', ') }}{% endif %})</span>{{ ";" if not loop.last }}
         {% endfor %}</td>
     </tr>
     {% endfor %}</tbody>
