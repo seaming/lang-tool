@@ -39,6 +39,13 @@ def char_count(text, n):
 
 
 @app.template_filter()
+def pluralize(n, singular='', plural='s'):
+    if n == 1:
+        return singular
+    return plural
+
+
+@app.template_filter()
 def convert_pos(abbr, lang):
     c = WordClassifier.get_or_none(WordClassifier.lang == lang, WordClassifier.type ==
                                CLASSIFIER_TYPE_POS, WordClassifier.abbr == abbr)

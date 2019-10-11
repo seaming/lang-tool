@@ -2,97 +2,114 @@
 
 {% block title %}{{ lang.name }} language{% endblock %}
 
+{% block head %}
+<style>
+  table#dictionary th.sticky {
+    /* this space allows for the lang page header */
+    top: 87px;
+  }
+
+  form#search-bar {
+    display: grid;
+    grid-template-columns: 1fr min-content min-content;
+    margin-top: 20px;
+  }
+
+  #search-bar-select {
+    white-space: nowrap;
+    margin-left: 8px;
+  }
+</style>
+{% endblock %}
+
 {% block body %}
 
-{% if lang.parent or lang.daughters %}
-<div class="float-right family-box">
-  {% if lang.parent %}{{ lang.name }} is a daughter of <a href="{{ url_for('view_lang', code=lang.parent.code) }}">{{
-    lang.parent.name }}</a>.<br>{% endif %}
-  {% if lang.daughters %}{{ lang.name }} has {{ lang.daughters|length }} daughter{{ 's' if lang.daughters|length != 1
-  else '' }}<ul>{% for d in lang.daughters %}<li><a href="{{ url_for('view_lang', code=d.code) }}">{{ d.name }}</a></li>{%
-    endfor %}</ul>{% endif %}
+<div class="sticky header">{{ lang.name }}</div>
+
+<div class="lang-description">
+  {{ (lang.description or 'No description found.')|markdown }}
 </div>
-{% endif %}
-
-<h2>{{ lang.name }}</h2>
-
-<div class="user-content lang-description">{{ (lang.description or 'No description found.')|markdown }}</div>
 
 <hr>
 
-<h5>Sound change sets</h5>
-<div class="sc-set-grid">
-  {% for set in (lang.sc_sets + lang.arriving_sc_sets) %}
-  <a href="{{ url_for('view_set', id=set.id.hex) }}">
-    <div class="sc-set-box">{{ set.name }}<span class="float-right text-muted">{{ set.count_rules() }} rule{% if
-        set.count_rules() != 1 %}s{% endif %}</span></div>
-  </a>
-  {% endfor %}
-</div>
-
-<br>
-<hr>
-
-<form action="{{ url_for('view_lang', code=lang.code) }}" method="GET">
-  <div class="row center">
-    <div class="col-8"><input class="small" type="text" name="q" placeholder="Search..." {% if request.args.get("q")
-        %}value="{{ request.args.get("q") }}{% endif %}"></div>
-    <div class="col-3 small">
-      Sort by &thinsp;
-      <select name="sort" class="small">
-        <option value="nat" {% if request.args.get("sort")=="nat" %}selected{% endif %}>
-          {{ lang.name or 'Unnamed language' }}
-        </option>
-        <option value="en" {% if request.args.get("sort")=="en" %}selected{% endif %}>English</option>
-        <option value="pos" {% if request.args.get("sort")=="pos" %}selected{% endif %}>part of speech</option>
-        {% if lang.use_classes %}
-        <option value="class" {% if request.args.get("sort")=="class" %}selected{% endif %}>class</option>
-        {% endif %}
-      </select>
-    </div>
-    <div class="col-1"><input class="small" type="submit" value="🔎"></div>
+<form id="search-bar" action="{{ url_for('view_lang', code=lang.code) }}" method="GET">
+  <div>{% set query = request.args.get('q') %}
+    <input class="small" type="text" name="q" placeholder="Search..." {% if query %} value="{{ query }}" {% endif %}>
   </div>
+  <div id="search-bar-select" class="small">
+    <span>Sort by</span>
+    <select name="sort" class="small">{% set sort = request.args.get('sort') %}
+      <option value="nat" {% if sort=='nat' %} selected{% endif %}>{{ lang.name }}</option>
+      <option value="en" {% if sort=='en' %} selected{% endif %}>English</option>
+      <option value="pos" {% if sort=='pos' %} selected{% endif %}>Part of speech</option>{% if lang.use_classes %}
+      <option value="class" {% if sort=='class' %} selected{% endif %}>Class</option>
+      {% endif %}
+    </select>
+  </div>
+  <div><input class="small" type="submit" value="🔎"></div>
 </form>
 
 <table id="dictionary">
   <thead>
-    <th>{{ lang.name or 'Unnamed language' }}</th>
-    <th>English</th>
+    <th class="sticky">{{ lang.name or 'Unnamed language' }}</th>
+    <th class="sticky">English</th>
   </thead>
-  <tbody>
-    {% for word in words %}
-    <tr class="clickable-row {% if word.autoderived %}autoderived{% endif %}" href="{{ url_for('view_word', id=word.id.hex) }}"
-      onclick="go_to_word(this);">
-      <td>{{ word.nat }}</td>
-      <td {% if word.definitions|map(attribute='en' )|join(';')|length> 50 %}class="small-text"{% endif %}>
-        {% for d in word.definitions %}
-        {{ d.en }} <span class="small text-muted">
-          ({{ d.pos }}{% if d.classes %}; {{ d.classes|split('\n')|join(', ') }}{% endif %})</span>{{ "; " if not
-        loop.last }}
-        {% endfor %}</td>
-    </tr>
-    {% endfor %}
+  <tbody>{% for word in words %}
+    <tr class="clickable-row{% if word.autoderived %} autoderived{% endif %}"
+      href="{{ url_for( 'view_word', id=word.id.hex) }} " onclick="linkToWord(this); ">
+      <td>{{ word.nat }}</td>{% set too_long = word.definitions|map(attribute='en')|join(';')|length>50 %}
+      <td {% if too_long %}class="small-text" {% endif %}>{% for d in word.definitions %}
+        {{ d.en }} <span class="small text-muted ">({{ d.pos }}{% if d.classes %};
+          {{ d.classes|split('\n')|join(', ') }}{% endif %})</span>{{ "; " if not loop.last }}{% endfor %}
+      </td>
+    </tr>{% endfor %}
   </tbody>
 </table>
 
 {% endblock %}
 
-{% block nav %}
-<a href="{{ url_for('home') }}">🏠</a>
-<a href="{{ url_for('edit_lang', code=lang.code) }}">⚙️</a>
-<br><br>
-<a href="{{ url_for('add_word_get', code=lang.code) }}">➕</a>
-<a href="{{ url_for('add_set', code=lang.code) }}">🔁</a>
+{% block sidebar %}{% if lang.parent or lang.daughters %}
+<div class="sidebar-box">
+  <div class="title">Genetic relationships</div>
+  <div class="content">{% if lang.parent %}
+    {{ lang.name }} is a daughter of <a
+      href="{{ url_for('view_lang', code=lang.parent.code) }}">{{lang.parent.name }}</a>.<br>
+    {% endif %}{% if lang.daughters %}
+    {{ lang.name }} has {{ lang.daughters|length }} daughter{{ lang.daughters|length|pluralize }}
+    <ul>{% for d in lang.daughters %}
+      <li><a href="{{ url_for('view_lang', code=d.code) }}">{{ d.name }}</a></li>
+      {% endfor %}</ul>{% endif %}
+  </div>
+</div>{% endif %}
+
+<div class="sidebar-box sc-sets stacked">
+  <div class="title">Sound change sets</div>
+  <div class="content">{% for set in (lang.sc_sets + lang.arriving_sc_sets) %}
+    <a class="button-link" href="{{ url_for('view_set', id=set.id.hex) }}">{{ set.name }}
+      <span class="float-right text-muted">{{ set.count_rules() }} rule{{ set.count_rules()|pluralize }}</span>
+    </a>{% endfor %}
+  </div>
+</div>
+
+<div class="sidebar-box actions stacked">
+  <div class="title">Actions</div>
+  <div class="content">
+    <a class="button-link action" href="{{ url_for('edit_lang', code=lang.code) }}">Edit information</a>
+    <a class="button-link action" href="{{ url_for('add_word_get', code=lang.code) }}">Add word</a>
+    <a class="button-link action" href="{{ url_for('add_set', code=lang.code) }}">Add sound change set</a>
+    <a class="button-link action" href="{{ url_for('home') }}">Back to main list</a>
+  </div>
+</div>
 {% endblock %}
 
 {% block script %}
 <script>
   if ((window.location.search.indexOf('q=') > -1)
     && (window.location.search.indexOf('q=&') == -1)) {
-    window.location.hash = "dictionary";
+    window.location.hash = "dictionary ";
   }
 
-  function go_to_word(el) {
+  function linkToWord(el) {
     location.href = el.getAttribute('href');
   }
 </script>
