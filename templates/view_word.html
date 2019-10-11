@@ -2,79 +2,119 @@
 
 {% block title %}{{ word.nat }} | View word{% endblock %}
 
+{% block head %}
+<style>
+  .header {
+    padding-left: 30px;
+  }
+
+  .pronunciation {
+    padding-right: 30px;
+    vertical-align: bottom;
+  }
+
+  .pronunciation::before {
+    content: '[ ';
+  }
+
+  .pronunciation::after {
+    content: ' ]';
+  }
+
+  .notes {
+    font-size: 0.9rem;
+  }
+
+  li {
+    margin-bottom: 0.5em;
+    font-size: 1.1rem;
+  }
+
+  .sc-set-grid {
+    display: grid;
+    gap: 8px 10px;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  .sc-set-box {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+  }
+</style>
+{% endblock %}
+
 {% block body %}
 
-{% if word.autoderived %}
-<div>
-  <div class="flash warning">This word was autoderived, and will inherit changes to the form of its parent word.</div>
+<div class="header">{{ word.nat }}
+  <span class="pronunciation text-muted float-right">{{ word.lang.pronounce(word.nat) }}</span>
 </div>
-{% endif %}
 
-<div class="word-nat">{{ word.nat }}&emsp;<span class="pronunciation text-muted">{{ word.lang.pronounce(word.nat) }}</span></div>
-<div class="float-right">word in <a href="{{ url_for('view_lang', code=word.lang.code) }}">{{ word.lang.name }}</a></div><br>
+{% if word.notes %}<div>{{ word.notes|markdown }}</div>{% endif %}
 
-{% if word.notes %}<div class="lang-description">{{ word.notes|markdown }}</div>{% endif %}
-
-<ol class="word-defs">
-  {% for d in word.definitions %}
-  <li class="def"><span class="text-muted">({{ d.pos|convert_pos(word.lang) }}{% if d.classes %}; {{
-      d.classes|split('\n')|map('convert_class', word.lang)|join(', ') }}{% endif %})</span><span class="def">{{ d.en }}</span><br>
-    {% if d.notes %}<span style="font-size:90%;">{{ d.notes }}</span>{% endif %}</li>
-  {% endfor %}
-</ol>
+<ol>
+  {% for d in word.definitions %}{% set class_list = d.classes|split('\n')|map('convert_class', word.lang)|join(', ') %}
+  <li><span class="text-muted">({{ d.pos|convert_pos(word.lang) }}{% if d.classes %};
+      {{ class_list }}{% endif %})</span>
+    <span>{{ d.en }}</span><br>
+    {% if d.notes %}<span class="notes">{{ d.notes }}</span>
+    {% endif %}</li>
+  {% endfor %}</ol>
 
 {% if word.parent %}
 <p>
   This word comes from <a href="{{ url_for('view_lang', code=word.parent.lang.code) }}">{{ word.parent.lang.name }}</a>
-  &mdash; <a href="{{ url_for('view_word', id=word.parent.id) }}"><i>{{ word.parent.nat }}</i></a> {% for d in
-  word.parent.definitions %}{{ d.en }} <span class="small text-muted">({{ d.pos }}{% if d.classes %}; {{
-    d.classes|split('\n')|join(', ') }}{% endif %})</span>; {% endfor %}
-</p>
+  &mdash; <a href="{{ url_for('view_word', id=word.parent.id) }}"><i>{{ word.parent.nat }}</i></a>
+  {% for d in word.parent.definitions %}{{ d.en }}
+  <span class="small text-muted">
+    ({{ d.pos }}{% if d.classes %}; {{ d.classes|split('\n')|join(', ') }}{% endif %})</span>{{ ';' if not loop.last }}
+  {% endfor %}</p>
 {% endif %}
 
-{% if word.descendants %}
-<h3>Derived words</h3>
+{% if word.descendants %}<h3>Derived words</h3>
 <table class="no-head">
-  <tbody>
-    {% for w in word.descendants %}
-    <tr class="clickable-row {% if w.autoderived %}autoderived{% endif %}" href="{{ url_for('view_word', id=w.id.hex) }}" onclick="go_to_word(this);">
+  <tbody>{% for w in word.descendants %}
+    <tr class="clickable-row {% if w.autoderived %}autoderived{% endif %}"
+      href="{{ url_for('view_word', id=w.id.hex) }}" onclick="linkToWord(this);">
       <td>{{ w.lang.name }}</td>
       <td>{{ w.nat }}</td>
-      <td {% if w.definitions|map(attribute='en' )|join(';')|length> 50 %}class="small-text"{% endif %}>
+      <td {% if w.definitions|map(attribute='en' )|join(';')|length> 50 %}class="small-text" {% endif %}>
         {% for d in w.definitions %}
         {{ d.en }} <span class="small text-muted">
           ({{ d.pos }}{% if d.classes %}; {{ d.classes|split('\n')|join(', ') }}{% endif %})</span>{{ "," if not
         loop.last }}
         {% endfor %}</td>
     </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% endif %}
+    {% endfor %}</tbody>
+</table>{% endif %}
 
 {% if word.lang.get_derivation_sets() %}
 <h3>Derive this word</h3>
-<div class="sc-set-grid">
-  {% for set in word.lang.get_derivation_sets() %}
-  <a href="{{ url_for('derive_word', id=word.id, set_id=set.id) }}">
-    <div class="sc-set-box">{{ set.name }}</div>
-  </a>
-  {% endfor %}
-</div>
+<div class="sc-set-grid">{% for set in word.lang.get_derivation_sets() %}
+  <a class="sc-set-box button-link" href="{{ url_for('derive_word', id=word.id, set_id=set.id) }}">{{ set.name }}</a>
+  {% endfor %}</div>
 {% endif %}
 
 {% endblock %}
 
-{% block nav %}
-<a href="{{ url_for('view_lang', code=word.lang.code) }}">🔠</a>
-<a href="{{ url_for('edit_word', id=word.id.hex) }}">✏️</a>
-<br><br>
-<a href="{{ url_for('delete_word', id=word.id.hex) }}">🗑</a>
+{% block sidebar %}
+<div class="sidebar-box stacked">
+  <div class="title">Actions</div>
+  <div class="content">
+    <a class="button-link action" href="{{ url_for('view_lang', code=word.lang.code) }}">Back to
+      {{ word.lang.name }}</a>
+    <a class="button-link action" href="{{ url_for('edit_word', id=word.id.hex) }}">Edit this word</a>
+    <div></div>
+    <a class="button-link action" href="{{ url_for('delete_word', id=word.id.hex) }}">Delete this word</a>
+  </div>
+</div>
 {% endblock %}
 
 {% block script %}
 <script>
-  function go_to_word(el) {
+  function linkToWord(el) {
     location.href = el.getAttribute('href');
   }
 </script>

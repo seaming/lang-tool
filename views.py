@@ -296,6 +296,10 @@ def add_word_post(code):
 @app.route('/word/<id>/')
 def view_word(id):
     word = Word.get_by_id(UUID(id))
+
+    if word.autoderived:
+        flash("This word was autoderived, and will inherit changes to the form of its parent word.", 'warning')
+
     return render_template('view_word.html', word=word)
 
 

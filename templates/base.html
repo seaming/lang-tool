@@ -11,8 +11,8 @@
 
 <body>
   <div class="main-container">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}<div class="flashes">
+    {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}
+    <div class="flashes">
       {% for category, message in messages %}<div class="flash {{ category }}">{{ message|safe }}</div>{% endfor %}
     </div>{% endif %}{% endwith %}
     {% block body %}{% endblock %}
