@@ -12,7 +12,7 @@
   form#search-bar {
     display: grid;
     grid-template-columns: 1fr min-content min-content;
-    margin-top: 20px;
+    margin: 20px 0 10px 0;
   }
 
   #search-bar-select {
@@ -26,7 +26,7 @@
 
 <div class="sticky header">{{ lang.name }}</div>
 
-<div class="lang-description">
+<div class="user-text">
   {{ (lang.description or 'No description found.')|markdown }}
 </div>
 

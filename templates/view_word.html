@@ -52,7 +52,9 @@
   <span class="pronunciation text-muted float-right">{{ word.lang.pronounce(word.nat) }}</span>
 </div>
 
-{% if word.notes %}<div>{{ word.notes|markdown }}</div>{% endif %}
+{% if word.notes %}<div class="user-text">
+  {{ word.notes|markdown }}
+</div>{% endif %}
 
 <ol>
   {% for d in word.definitions %}{% set class_list = d.classes|split('\n')|map('convert_class', word.lang)|join(', ') %}
