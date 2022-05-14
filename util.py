@@ -3,7 +3,7 @@ from flask import request, Markup
 from app import app, db
 from models import WordClassifier, CLASSIFIER_TYPE_POS, CLASSIFIER_TYPE_CLASS
 
-markdown = mistune.create_markdown()
+render_markdown = mistune.create_markdown()
 
 
 @app.before_request
@@ -19,7 +19,7 @@ def after_request(response):
 
 @app.template_filter()
 def markdown(text):
-    return Markup(markdown(text))
+    return Markup(render_markdown(text))
 
 
 @app.template_filter()
