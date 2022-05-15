@@ -9,11 +9,10 @@
   <div class="lang-description">{{ lang.description|char_count(500) }}</div>{% endif %}
 </a>
 {% endfor %}
+{% endblock %}
 
-<br>
-
+{% block sidebar %}
 <a class="lang-button text-muted" href="{{ url_for('add_lang') }}">
   Add new language
 </a>
-
 {% endblock %}

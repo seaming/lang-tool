@@ -48,7 +48,7 @@
 
 {% block body %}
 
-<div class="header">{{ word.nat }}
+<div class="header"><b>{{ word.nat }}</b>
   <span class="pronunciation text-muted float-right">{{ word.lang.pronounce(word.nat) }}</span>
 </div>
 
@@ -68,7 +68,7 @@
 {% if word.parent %}
 <p>
   This word comes from <a href="{{ url_for('view_lang', code=word.parent.lang.code) }}">{{ word.parent.lang.name }}</a>
-  &mdash; <a href="{{ url_for('view_word', id=word.parent.id) }}"><i>{{ word.parent.nat }}</i></a>
+  <a href="{{ url_for('view_word', id=word.parent.id) }}"><i>{{ word.parent.nat }}</i></a>
   {% for d in word.parent.definitions %}{{ d.en }}
   <span class="small text-muted">
     ({{ d.pos }}{% if d.classes %}; {{ d.classes|split('\n')|join(', ') }}{% endif %})</span>{{ ';' if not loop.last }}
@@ -107,7 +107,6 @@
     <a class="button-link action" href="{{ url_for('view_lang', code=word.lang.code) }}">Back to
       {{ word.lang.name }}</a>
     <a class="button-link action" href="{{ url_for('edit_word', id=word.id.hex) }}">Edit this word</a>
-    <div></div>
     <a class="button-link action" href="{{ url_for('delete_word', id=word.id.hex) }}">Delete this word</a>
   </div>
 </div>

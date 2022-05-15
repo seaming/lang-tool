@@ -6,7 +6,7 @@
 <style>
   table#dictionary th.sticky {
     /* this space allows for the lang page header */
-    top: 87px;
+    top: calc(50px + 1.5rem + 2px);
   }
 
   form#search-bar {
@@ -73,9 +73,9 @@
   <div class="title">Genetic relationships</div>
   <div class="content">{% if lang.parent %}
     {{ lang.name }} is a daughter of <a
-      href="{{ url_for('view_lang', code=lang.parent.code) }}">{{lang.parent.name }}</a>.<br>
+      href="{{ url_for('view_lang', code=lang.parent.code) }}">{{lang.parent.name }}</a>.
     {% endif %}{% if lang.daughters %}
-    {{ lang.name }} has {{ lang.daughters|length }} daughter{{ lang.daughters|length|pluralize }}
+    {{ lang.name }} has {{ lang.daughters|length }} daughter{{ lang.daughters|length|pluralize }}:
     <ul>{% for d in lang.daughters %}
       <li><a href="{{ url_for('view_lang', code=d.code) }}">{{ d.name }}</a></li>
       {% endfor %}</ul>{% endif %}
