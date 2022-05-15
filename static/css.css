@@ -56,8 +56,9 @@ body {
 }
 
 .sidebar-container {
-    /* padding: 50px 60px 0 60px; */
     width: 100%;
+    padding-top: 30px;
+    margin-top: -30px;
     height: min-content;
     position: sticky;
     top: 0;
@@ -138,7 +139,7 @@ body {
 
 .sidebar-box ul {
     margin: 0;
-    padding: 2px;
+    padding: 4px 0px;
     list-style-type: none;
 }
 
@@ -165,10 +166,15 @@ body {
 
 .flash {
     width: 100%;
-    margin: 8px 0px;
+    margin: -22px 0px 30px 0px;
     padding: 12px;
     border: 1px solid #e6e6e6;
     border-radius: 6px;
+}
+
+.flash span.float-right {
+    margin-top: 1px;
+    cursor: pointer;
 }
 
 .success {

@@ -93,7 +93,7 @@
 
 {% if word.lang.get_derivation_sets() %}
 <h3>Derive this word</h3>
-<div class="sc-set-grid">{% for set in word.lang.get_derivation_sets() %}
+<div class="sc-set-grid">{% for set in word.lang.get_derivation_sets() if set.target_lang is not none %}
   <a class="sc-set-box button-link" href="{{ url_for('derive_word', id=word.id, set_id=set.id) }}">{{ set.name }}</a>
   {% endfor %}</div>
 {% endif %}
