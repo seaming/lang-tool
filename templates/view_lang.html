@@ -85,8 +85,9 @@
 <div class="sidebar-box sc-sets stacked">
   <div class="title">Sound change sets</div>
   <div class="content">{% for set in (lang.sc_sets + lang.arriving_sc_sets) %}
-    <a class="button-link" href="{{ url_for('view_set', id=set.id.hex) }}">{{ set.name }}
-      <span class="float-right text-muted">{{ set.count_rules() }} rule{{ set.count_rules()|pluralize }}</span>
+    <a class="button-link sc-set-link" href="{{ url_for('view_set', id=set.id.hex) }}">
+      <span>{{ set.name }}</span>
+      <span class="text-muted">{{ set.count_rules() }} rule{{ set.count_rules()|pluralize }}</span>
     </a>{% endfor %}
   </div>
 </div>

@@ -18,7 +18,7 @@
 <div class="lang-description">{{ set.description|markdown }}</div>
 {% endif %}
 
-<div class="row">
+<!-- <div class="row">
   <div class="col-6">
     <div class="form-label">Test set&emsp;
       <span class="small text-muted">Individual words on separate lines.</span></div>
@@ -27,7 +27,7 @@
   <div class="col-6">
     <table id="test-set-output" class="sc-ruleset"></table>
   </div>
-</div>
+</div> -->
 
 {% if set.changes %}
 <table class="sc-ruleset">
@@ -44,11 +44,15 @@
 
 {% endblock %}
 
-{% block nav %}
-<a href="{{ url_for('view_lang', code=set.parent_lang.code) }}">🔠</a>
-<a href="{{ url_for('edit_set', id=set.id.hex) }}">✏️</a>
-<br><br>
-<a href="{{ url_for('delete_set', id=set.id.hex) }}">🗑</a>
+{% block sidebar %}
+<div class="sidebar-box stacked">
+  <div class="title">Actions</div>
+  <div class="content">
+    <a class="button-link action" href="{{ url_for('view_lang', code=set.parent_lang.code) }}">Back to {{ set.parent_lang.name }}</a>
+    <a class="button-link action" href="{{ url_for('edit_set', id=set.id.hex) }}">Edit this set</a>
+    <a class="button-link action" href="{{ url_for('delete_set', id=set.id.hex) }}">Delete this set</a>
+  </div>
+</div>
 {% endblock %}
 
 {% block script %}

@@ -47,13 +47,13 @@
     <input class="small add-row" type="button" value="+" onclick="add_row(this);">
   </div>
 
-    <div class="col-2"><input type="checkbox" name="use_classes" {% if lang.use_classes %}checked{% endif %} class="float-right"></div>
-    <div class="col-3 form-label">Use classes?</div>
+    <div class="form-label">Use classes?</div>
+    <div><input type="checkbox" name="use_classes" {% if lang.use_classes %}checked{% endif %} onclick="update_class_usage(this);"></div>
 
   <!-- <br> -->
 
-    <div class="form-label">Classes</div>
-    <div class="class-pos-form">
+    <div class="classes-sec form-label{% if not lang.use_classes %} hidden{% endif %}">Classes</div>
+    <div class="classes-sec class-pos-form{% if not lang.use_classes %} hidden{% endif %}">
       {% if classes %}
       {% for c in classes %}
       <div class="small"><input class="small" type="text" placeholder="Name" name="classes_long-{{ loop.index-1 }}" value="{{ c.long }}"></div>
@@ -106,6 +106,13 @@
         increment_suffix(inputs[i], 'name');
       }
     }
+  }
+
+  function update_class_usage(el) {
+    var sec = document.querySelectorAll('.classes-sec');
+    if (el.checked)
+      sec.forEach(x => x.classList.remove('hidden'));
+    else sec.forEach(x => x.classList.add('hidden'));
   }
 
   function cancel() {

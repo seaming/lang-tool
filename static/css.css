@@ -90,7 +90,6 @@ body {
 }
 
 .stacked>.content>* {
-    display: block;
     padding: 10px 14px;
 }
 
@@ -106,24 +105,6 @@ body {
 
 .stacked>.content> :not(:first-child) {
     border-top: 1px solid #e6e6e6;
-}
-
-.stacked.grid>.content {
-    grid-template-rows: repeat(1fr);
-    grid-template-columns: 1fr 1fr;
-}
-
-.stacked.grid>.content>:first-child { border-top-left-radius: 8px; }
-.stacked.grid>.content>:nth-child(2) { border-top-right-radius: 8px; }
-.stacked.grid>.content>:nth-last-child(2) { border-top-left-radius: 8px; }
-.stacked.grid>.content>:last-child { border-bottom-right-radius: 8px; }
-
-.stacked.grid>.content> :nth-child(even) {
-    border-left: 1px solid #e6e6e6;
-}
-
-.stacked.grid>.content>.end {
-    grid-column: 1 / 3;
 }
 
 .sidebar-box .action {
@@ -151,6 +132,10 @@ body {
     list-style-type: none;
 }
 
+.sidebar-box ul:last-child {
+    padding-bottom: 0;
+}
+
 .sidebar-box ul li::before {
     content: "→";
     margin-right: .5rem;
@@ -164,8 +149,7 @@ body {
     padding-top: 30px;
     margin-top: -30px;
     padding-bottom: 20px;
-    width: 100.5%;
-    /* .5% extra to hide the edges of wide characters */
+    width: 100%;
 }
 
 .flashes {
@@ -203,28 +187,32 @@ body {
  ******************************************************/
 
 table {
-    width: 100%;
     border-spacing: 0px;
 }
 
-/* .user-text table {
-    min
-} */
-
 table tr:hover {
     background-color: #f2f2f2;
+}
+
+table tr:last-child td {
+    border-bottom: 1px solid #d2d2d2;
 }
 
 table th {
     text-align: start;
     background: #f2f2f2;
     padding: 12px 12px 12px 12px;
+    border-top: 1px solid #d2d2d2;
     border-bottom: 1px solid #d2d2d2;
 }
 
 table td {
     padding: 6px 0px 6px 6px;
     border-bottom: 1px solid #f2f2f2;
+}
+
+table tr:first-child td {
+    padding-top: 8px;
 }
 
 table.no-head tr:first-child td {
@@ -307,6 +295,15 @@ input[type=submit].small {
     padding: 2px 8px;
 }
 
+input[type=button] {
+    cursor: pointer;
+}
+
+input[type=button]:hover {
+    background-color: #e3e3e3;
+    border: 1px solid #d9d9d9;
+}
+
 /******************************************************
  *                 Edit page styles
  ******************************************************/
@@ -323,6 +320,13 @@ input[type=submit].small {
     margin-left: 0;
 }
 
+.form-label span {
+    display: inline-block;
+    margin-top: .5rem;
+    padding-right: .1rem;
+    text-align: justify;
+}
+
 .class-pos-form {
     display: grid;
     gap: 0 .5rem;
@@ -337,8 +341,12 @@ input[type=submit].small {
 }
 
 /******************************************************
- *                  View word page
+ *                  View page styles
  ******************************************************/
+
+table#dictionary {
+    width: 100%;
+}
 
 .pronunciation {
     font-family: "Charis SIL";
@@ -348,7 +356,20 @@ input[type=submit].small {
  *              Sound change set styles
  ******************************************************/
 
- .sc-set-grid {
+.sc-set-link {
+    display: grid;
+    column-gap: .5rem;
+    grid-template-columns: 1fr auto;
+}
+
+.sc-set-link :first-child {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sc-set-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px 10px;
@@ -456,8 +477,7 @@ hr {
     border: 0.5px solid #e6e6e6;
     clear: both;
     display: block;
-    width: 100.5%;
-    /* .5% to match the bottom border on the header */
+    width: 100%;
     height: 1px;
 }
 

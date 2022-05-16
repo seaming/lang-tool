@@ -44,11 +44,11 @@ def add_lang():
 def add_lang_post():
     code = request.form.get('code')
     if not code:
-        flash('You must enter a code', 'danger')
+        flash('You must enter a code.', 'danger')
         return redirect(url_for('add_lang'))
 
     if Language.get_or_none(code=code):
-        flash('A language with this code already exists', 'danger')
+        flash('A language with this code already exists.', 'danger')
         return redirect(url_for('add_lang'))
 
     lang = Language.create(code=code)
@@ -112,7 +112,7 @@ def save_lang(code):
     if parent in lang.get_potential_parents() or parent is None:
         lang.parent = parent
     else:
-        flash('Could not add parent language as it would create a cycle in the family tree', 'danger')
+        flash('Could not add parent language as it would create a cycle in the family tree.', 'danger')
 
     lang.save()
 
@@ -159,7 +159,7 @@ def save_lang(code):
             c.long = v
         c.save()
 
-    flash('Successfully updated language settings!', 'success')
+    flash('Language settings updated!', 'success')
 
     return redirect(url_for('view_lang', code=code))
 
@@ -169,8 +169,8 @@ def delete_lang(code):
     lang = get_lang(code)
 
     if request.method == 'POST':
+        flash(f'Language deleted!', 'success')
         lang.delete_instance()
-        flash('Language deleted!', 'success')
         return redirect(url_for('home'))
 
     return render_template('delete_lang.html', lang=lang)
@@ -279,7 +279,7 @@ def add_word_post(code):
         i += 1
 
     if not definitions:
-        flash('You must enter at least one definition', 'danger')
+        flash('You must enter at least one definition.', 'danger')
         return redirect(url_for('add_word_get', code=lang.code))
 
     word_id = uuid4()
@@ -384,7 +384,7 @@ def save_word(id):
         i += 1
 
     if not definitions:
-        flash('Words must have at least one definition', 'danger')
+        flash('Words must have at least one definition.', 'danger')
         return redirect(url_for('edit_word', id=id))
 
     for i, d in enumerate(definitions):

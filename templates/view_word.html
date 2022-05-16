@@ -71,8 +71,7 @@
   <a href="{{ url_for('view_word', id=word.parent.id) }}"><i>{{ word.parent.nat }}</i></a>
   {% for d in word.parent.definitions %}{{ d.en }}
   <span class="small text-muted">
-    ({{ d.pos }}{% if d.classes %}; {{ d.classes|split('\n')|join(', ') }}{% endif %})</span>{{ ';' if not loop.last }}
-  {% endfor %}</p>
+    ({{ d.pos }}{% if d.classes %}; {{ d.classes|split('\n')|join(', ') }}{% endif %})</span>{{ ';' if not loop.last }}{% endfor %}.</p>
 {% endif %}
 
 {% if word.descendants %}<h3>Derived words</h3>
