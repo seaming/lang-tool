@@ -4,110 +4,81 @@
 
 {% block body %}
 <form action="{{ url_for('save_lang', code=lang.code) }}" method="POST">
-  <div class="row">
-    <div class="col-2 form-label">Language name</div>
-    <div class="col-10"><input type="text" name="name" value="{{ lang.name }}"></div>
+  <div class="form-body">
+  <div class="form-label">Language name</div>
+  <div><input type="text" name="name" value="{{ lang.name }}"></div>
+
+  <!-- <hr> -->
+
+  <div class="form-label">Description<br>
+    <span class="small text-muted">Language descriptions support markdown.</span></div>
+  <div>
+    <textarea name="description" rows=8>{{ lang.description }}</textarea>
   </div>
 
-  <hr>
+  <!-- <hr> -->
 
-  <div class="row">
-    <div class="col-2 form-label">Description<br>
-      <span class="small text-muted">Language descriptions support markdown.</span></div>
-    <div class="col-10">
-      <textarea name="description" rows=8>{{ lang.description }}</textarea>
-    </div>
-  </div>
-
-  <hr>
-
-  <div class="row">
-    <div class="col-2 form-label">Parent language<br></div>
-    <div class="col-10"><select class="col" name="parent">
-        <option value="0" {% if lang.parent==None %}selected{% endif %}>None</option>
-        {% for l in lang.get_potential_parents() %}
-        <option value="{{ l.code }}" {% if lang.parent.code==l.code %}selected{% endif %}>{{ l.name }} ({{ l.code }})</option>
-        {% endfor %}
-      </select></div>
-  </div>
-
-  <hr><br>
-
-  <div class="row">
-    <div class="col-2 form-label">Parts of speech<br>
-      <span class="small text-muted">Leave either field blank to remove the entry.</span></div>
-    <div class="col-10">
-      <div class="row">
-        <div class="col-6 small head">Long name</div>
-        <div class="col-6 small head">Abbreviation</div>
-      </div>
-
-      {% if pos %}
-      {% for p in pos %}
-      <div class="row">
-        <div class="col-6 small"><input class="small" type="text" name="pos_long-{{ loop.index-1 }}" value="{{ p.long }}"></div>
-        <div class="col-6 small"><input class="small" type="text" name="pos_abbr-{{ loop.index-1 }}" value="{{ p.abbr }}"></div>
-      </div>
+  <div class="form-label">Parent language<br></div>
+  <div>
+    <select name="parent">
+      <option value="0" {% if lang.parent==None %}selected{% endif %}>None</option>
+      {% for l in lang.get_potential_parents() %}
+      <option value="{{ l.code }}" {% if lang.parent.code==l.code %}selected{% endif %}>{{ l.name }} ({{ l.code }})</option>
       {% endfor %}
-      {% else %}
-      <div class="row">
-        <div class="col-6 small"><input class="small" type="text" name="pos_long-0"></div>
-        <div class="col-6 small"><input class="small" type="text" name="pos_abbr-0"></div>
-      </div>
-      {% endif %}
-
-      <div class="row">
-        <div class="col">
-          <input class="small add-row" type="button" value="+" onclick="add_row(this);">
-        </div>
-      </div>
-    </div>
+    </select>
   </div>
 
-  <div class="row">
+  <!-- <hr><br> -->
+
+  <div class="form-label">Parts of speech<br>
+    <span class="small text-muted">Leave either field blank to remove the entry on saving.</span>
+  </div>
+
+  <div class="class-pos-form">
+    {% if pos %}
+    {% for p in pos %}
+    <div class="small"><input class="small" type="text" placeholder="Name" name="pos_long-{{ loop.index-1 }}" value="{{ p.long }}"></div>
+    <div class="small"><input class="small" type="text" placeholder="Abbreviation" name="pos_abbr-{{ loop.index-1 }}" value="{{ p.abbr }}"></div>
+    {% endfor %}
+    {% else %}
+    <div class="small"><input class="small" type="text" placeholder="Name" name="pos_long-0"></div>
+    <div class="small"><input class="small" type="text" placeholder="Abbreviation" name="pos_abbr-0"></div>
+    {% endif %}
+    <input class="small add-row" type="button" value="+" onclick="add_row(this);">
+  </div>
+
     <div class="col-2"><input type="checkbox" name="use_classes" {% if lang.use_classes %}checked{% endif %} class="float-right"></div>
     <div class="col-3 form-label">Use classes?</div>
-  </div>
 
-  <br>
+  <!-- <br> -->
 
-  <div class="row">
-    <div class="col-2 form-label">Classes</div>
-    <div class="col-10">
-      <div class="row">
-        <div class="col-6 small head">Long name</div>
-        <div class="col-6 small head">Abbreviation</div>
-      </div>
-
+    <div class="form-label">Classes</div>
+    <div class="class-pos-form">
       {% if classes %}
       {% for c in classes %}
-      <div class="row">
-        <div class="col-6 small">
-          <input class="small" type="text" name="classes_long-{{ loop.index-1 }}" value="{{ c.long }}">
-        </div>
-        <div class="col-6 small">
-          <input class="small" type="text" name="classes_abbr-{{ loop.index-1 }}" value="{{ c.abbr }}">
-        </div>
-      </div>
+      <div class="small"><input class="small" type="text" placeholder="Name" name="classes_long-{{ loop.index-1 }}" value="{{ c.long }}"></div>
+      <div class="small"><input class="small" type="text" placeholder="Abbreviation" name="classes_abbr-{{ loop.index-1 }}" value="{{ c.abbr }}"></div>
       {% endfor %}
       {% else %}
-      <div class="row">
-        <div class="col-6 small"><input class="small" type="text" name="classes_long-0"></div>
-        <div class="col-6 small"><input class="small" type="text" name="classes_abbr-0"></div>
-      </div>
+      <div class="small"><input class="small" type="text" placeholder="Name" name="classes_long-0"></div>
+      <div class="small"><input class="small" type="text" placeholder="Abbreviation" name="classes_abbr-0"></div>
       {% endif %}
-
-      <div class="row">
-        <div class="col">
-          <input class="small add-row" type="button" value="+" onclick="add_row(this);">
-        </div>
-      </div>
+      <input class="small add-row" type="button" value="+" onclick="add_row(this);">
     </div>
   </div>
 
-  <input class="float-right" type="submit" value="Save">
-  <input class="float-right" type="button" value="Cancel" onclick="cancel();">
+  <input class="hidden" id="submit-form" type="submit">
 </form>
+{% endblock %}
+
+{% block sidebar %}
+<div class="sidebar-box stacked">
+  <div class="title">Actions</div>
+  <div class="content">
+    <label class="button-link action" for="submit-form"">Save</label>
+    <a class="button-link action" onclick="cancel();">Cancel</a>
+  </div>
+</div>
 {% endblock %}
 
 {% block nav %}
@@ -119,19 +90,21 @@
 {% block script %}
 <script>
   function add_row(el) {
-    var prev = el.parentNode.parentNode;
-    // find the previous li node, skipping text nodes
-    do prev = prev.previousSibling; while (prev && prev.nodeType !== 1);
-    var new_li = prev.cloneNode(true);
+    var prev = el.previousElementSibling;
+    var new_second = prev.cloneNode(true);
 
-    new_li = prev.parentNode.insertBefore(new_li, prev.nextSibling);
+    prev = prev.previousElementSibling;
+    var new_first = prev.cloneNode(true);
 
-    var inputs = new_li.querySelectorAll('input');
-    for (var i = 0; i < inputs.length; i++) {
-      inputs[i].value = "";
+    new_first = el.parentNode.insertBefore(new_first, el);
+    new_second = el.parentNode.insertBefore(new_second, el);
 
-      // increment field index
-      increment_suffix(inputs[i], 'name');
+    for (x of [new_first, new_second]) {
+      var inputs = x.querySelectorAll('input');
+      for (var i = 0; i < inputs.length; i++) {
+        inputs[i].value = "";
+        increment_suffix(inputs[i], 'name');
+      }
     }
   }
 

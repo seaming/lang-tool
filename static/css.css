@@ -126,15 +126,23 @@ body {
     grid-column: 1 / 3;
 }
 
-.sidebar-box a.action {
-    /* text-transform: uppercase; */
+.sidebar-box .action {
     text-align: center;
     letter-spacing: 0.06em;
 }
 
-.sidebar-box a.small {
+.sidebar-box .small {
     font-size: 0.85rem;
     padding: 8px 10px;
+}
+
+.button-link, .button-link:visited {
+    cursor: pointer;
+    color: inherit;
+}
+
+.button-link:hover {
+    background: #f2f2f2;
 }
 
 .sidebar-box ul {
@@ -300,6 +308,35 @@ input[type=submit].small {
 }
 
 /******************************************************
+ *                 Edit page styles
+ ******************************************************/
+
+.form-body {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr 4fr;
+}
+
+.form-body input, .form-body textarea, .form-body select {
+    margin-top: 0;
+    margin-bottom: 6px;
+    margin-left: 0;
+}
+
+.class-pos-form {
+    display: grid;
+    gap: 0 .5rem;
+    grid-template-columns: 2fr 1fr;
+    align-items: start;
+    align-content: stretch;
+}
+
+.class-pos-form .add-row {
+    grid-column-start: 1;
+    grid-column-end: -1;
+}
+
+/******************************************************
  *                  View word page
  ******************************************************/
 
@@ -415,18 +452,6 @@ a {
     color: #bf611a;
 }
 
-a.button-link {
-    color: inherit;
-}
-
-a.button-link:visited {
-    color: inherit;
-}
-
-a.button-link:hover {
-    background: #f2f2f2;
-}
-
 hr {
     border: 0.5px solid #e6e6e6;
     clear: both;
@@ -451,4 +476,8 @@ hr {
 
 .float-right {
     float: right;
+}
+
+.hidden {
+    display: none;
 }
