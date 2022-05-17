@@ -1,4 +1,4 @@
-from Conlanger.sce import run
+from Conlanger import sce
 from peewee import *
 from uuid import uuid4
 
@@ -118,4 +118,4 @@ class SoundChangeSet(BaseModel):
     def apply(self, words):
         if isinstance(words, str):
             words = words.splitlines()
-        return run(words, self.changes)
+        return sce.run(words, self.changes)

@@ -1,5 +1,5 @@
 import mistune
-from flask import request, Markup
+from flask import Markup
 from app import app, db
 from app.models import WordClassifier, CLASSIFIER_TYPE_POS, CLASSIFIER_TYPE_CLASS
 
