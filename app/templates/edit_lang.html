@@ -77,6 +77,7 @@
   <div class="content">
     <label class="button-link action" for="submit-form"">Save</label>
     <a class="button-link action" onclick="cancel();">Cancel</a>
+    <a class="button-link action" href="{{ url_for('delete_lang', code=lang.code) }}">Delete {{ lang.name }}</a>
   </div>
 </div>
 {% endblock %}

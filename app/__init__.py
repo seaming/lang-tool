@@ -1,5 +1,4 @@
 import os
-
 from flask import Flask
 from peewee import SqliteDatabase
 
@@ -12,3 +11,5 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 
 db = SqliteDatabase(app.config['DATABASE'], pragmas={'foreign_keys': 1})
+
+app.teardown_appcontext(lambda _: db.close())

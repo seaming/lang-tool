@@ -1,7 +1,7 @@
 import mistune
 from flask import request, Markup
 from app import app, db
-from models import WordClassifier, CLASSIFIER_TYPE_POS, CLASSIFIER_TYPE_CLASS
+from app.models import WordClassifier, CLASSIFIER_TYPE_POS, CLASSIFIER_TYPE_CLASS
 
 render_markdown = mistune.create_markdown(plugins=['table', 'strikethrough'])
 

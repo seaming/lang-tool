@@ -1,9 +1,10 @@
+from . import app
 from flask import request, render_template, redirect, url_for, flash, abort
 from peewee import fn, JOIN, DoesNotExist
 from uuid import uuid4, UUID
 
-from app import app, db
-from models import (
+from app import db
+from app.models import (
     Language,
     Word,
     Definition,
